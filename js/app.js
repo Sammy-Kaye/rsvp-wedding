@@ -11,22 +11,58 @@ const rsvpOptions = document.querySelectorAll('.rsvp-option');
 const downloadInviteBtn = document.getElementById('downloadInvite');
 const scrollDown = document.querySelector('.scroll-down');
 
-// Sample guest data (in a real app, this would come from a backend API)
-const guestList = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', rsvp: 'pending' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', rsvp: 'pending' },
-    { id: 3, name: 'Michael Johnson', email: 'michael@example.com', rsvp: 'pending' },
-    { id: 4, name: 'Sarah Williams', email: 'sarah@example.com', rsvp: 'pending' },
-    { id: 5, name: 'David Brown', email: 'david@example.com', rsvp: 'pending' },
-    { id: 6, name: 'Emily Davis', email: 'emily@example.com', rsvp: 'pending' },
-    { id: 7, name: 'Robert Wilson', email: 'robert@example.com', rsvp: 'pending' },
-    { id: 8, name: 'Lisa Anderson', email: 'lisa@example.com', rsvp: 'pending' },
-    { id: 9, name: 'James Taylor', email: 'james@example.com', rsvp: 'pending' },
-    { id: 10, name: 'Jennifer Martinez', email: 'jennifer@example.com', rsvp: 'pending' },
-];
+// Initialize Firestore
+db.settings({ timestampsInSnapshots: true });
 
-// Track current guest
+// Track current guest and guest list
 let currentGuest = null;
+let guestList = [];
+
+// Listen for guest search input
+guestSearch.addEventListener('input', debounce(handleGuestSearch, 300));
+
+// Debounce function to limit API calls
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Handle guest search
+async function handleGuestSearch(e) {
+    const searchTerm = e.target.value.trim().toLowerCase();
+    
+    if (searchTerm.length < 2) {
+        searchResults.innerHTML = '';
+        searchResults.classList.remove('active');
+        return;
+    }
+    
+    try {
+        const guestsRef = db.collection('guests');
+        const snapshot = await guestsRef
+            .where('name', '>=', searchTerm)
+            .where('name', '<=', searchTerm + '\uf8ff')
+            .limit(10)
+            .get();
+            
+        const matches = [];
+        snapshot.forEach(doc => {
+            matches.push({ id: doc.id, ...doc.data() });
+        });
+        
+        displaySearchResults(matches);
+    } catch (error) {
+        console.error('Error searching guests:', error);
+        showMessage('Error', 'Failed to search guests. Please try again.');
+    }
+}
 
 // Mobile Menu Toggle
 mobileMenuBtn.addEventListener('click', () => {
@@ -102,6 +138,28 @@ function displaySearchResults(guests) {
             const guestElement = document.createElement('div');
             guestElement.textContent = guest.name;
             guestElement.dataset.id = guest.id;
+            
+            // Show RSVP status if already responded
+            if (guest.rsvp !== 'pending') {
+                const status = document.createElement('span');
+                status.textContent = ` (${guest.rsvp === 'attending' ? '✓ Attending' : '✗ Not Attending'})`;
+                status.style.marginLeft = '10px';
+                status.style.color = guest.rsvp === 'attending' ? 'green' : 'red';
+                guestElement.appendChild(status);
+            }
+            
+            guestElement.style.padding = '10px 15px';
+            guestElement.style.cursor = 'pointer';
+            guestElement.style.transition = 'background-color 0.2s';
+            
+            guestElement.addEventListener('mouseover', () => {
+                guestElement.style.backgroundColor = '#f5f5f5';
+            });
+            
+            guestElement.addEventListener('mouseout', () => {
+                guestElement.style.backgroundColor = 'transparent';
+            });
+            
             guestElement.addEventListener('click', () => selectGuest(guest));
             searchResults.appendChild(guestElement);
         });
@@ -111,23 +169,40 @@ function displaySearchResults(guests) {
 }
 
 // Select a guest from search results
-function selectGuest(guest) {
-    currentGuest = guest;
-    guestSearch.value = guest.name;
-    searchResults.classList.remove('active');
-    
-    // Check if guest has already RSVP'd
-    if (guest.rsvp !== 'pending') {
-        showMessage('RSVP Already Submitted', 
-                   `It looks like ${guest.name} has already submitted an RSVP. ` +
-                   'Please contact the couple if you believe this is an error.');
-        return;
+async function selectGuest(guest) {
+    try {
+        // Get the latest guest data from Firestore
+        const guestDoc = await db.collection('guests').doc(guest.id).get();
+        if (!guestDoc.exists) {
+            showMessage('Error', 'Guest not found. Please contact the couple.');
+            return;
+        }
+        
+        const guestData = { id: guestDoc.id, ...guestDoc.data() };
+        currentGuest = guestData;
+        guestSearch.value = guestData.name;
+        searchResults.classList.remove('active');
+        
+        // Check if guest has already RSVP'd
+        if (guestData.rsvp !== 'pending') {
+            showMessage(
+                'RSVP Already Submitted', 
+                `It looks like ${guestData.name} has already submitted an RSVP.\n\n` +
+                `Status: ${guestData.rsvp === 'attending' ? '✓ Attending' : '✗ Not Attending'}\n` +
+                `Response Date: ${new Date(guestData.lastUpdated?.toDate()).toLocaleDateString()}\n\n` +
+                'Please contact the couple if you believe this is an error.'
+            );
+            return;
+        }
+        
+        // Show RSVP form
+        guestNameElement.textContent = guestData.name;
+        rsvpForm.classList.remove('hidden');
+        rsvpForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (error) {
+        console.error('Error selecting guest:', error);
+        showMessage('Error', 'Failed to load guest information. Please try again.');
     }
-    
-    // Show RSVP form
-    guestNameElement.textContent = guest.name;
-    rsvpForm.classList.remove('hidden');
-    rsvpForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // Handle RSVP option selection
@@ -139,36 +214,49 @@ rsvpOptions.forEach(option => {
 });
 
 // Submit RSVP
-function submitRSVP(response) {
+async function submitRSVP(response) {
     if (!currentGuest) return;
     
-    // In a real app, you would send this to your backend
-    console.log(`RSVP for ${currentGuest.name}: ${response}`);
-    
-    // Update guest status
-    currentGuest.rsvp = response;
-    
-    // Show success message
-    rsvpForm.classList.add('hidden');
-    rsvpSuccess.classList.remove('hidden');
-    
-    // Generate and display unique code
-    const uniqueCode = generateUniqueCode(currentGuest.id);
-    document.getElementById('guestGreeting').textContent = `Thank you, ${currentGuest.name}!`;
-    
-    // Scroll to success message
-    rsvpSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    
-    // Store RSVP in localStorage (temporary solution)
-    const rsvpData = {
-        guestId: currentGuest.id,
-        name: currentGuest.name,
-        response: response,
-        code: uniqueCode,
-        timestamp: new Date().toISOString()
-    };
-    
-    localStorage.setItem(`rsvp_${currentGuest.id}`, JSON.stringify(rsvpData));
+    try {
+        // Generate a unique code if it doesn't exist
+        const uniqueCode = currentGuest.code || generateUniqueCode(currentGuest.id);
+        
+        // Update guest in Firestore
+        await db.collection('guests').doc(currentGuest.id).update({
+            rsvp: response,
+            code: uniqueCode,
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Update local guest object
+        currentGuest.rsvp = response;
+        currentGuest.code = uniqueCode;
+        
+        // Show success message
+        rsvpForm.classList.add('hidden');
+        rsvpSuccess.classList.remove('hidden');
+        
+        // Update success message
+        document.getElementById('guestGreeting').textContent = `Thank you, ${currentGuest.name}!`;
+        
+        // Scroll to success message
+        rsvpSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Show the unique code
+        const codeElement = document.createElement('div');
+        codeElement.style.margin = '20px 0';
+        codeElement.style.fontSize = '1.2rem';
+        codeElement.style.fontWeight = 'bold';
+        codeElement.style.color = 'var(--primary-color)';
+        codeElement.textContent = `Your RSVP Code: ${uniqueCode}`;
+        
+        const successContent = document.querySelector('.success-message p:last-child');
+        successContent.parentNode.insertBefore(codeElement, successContent);
+        
+    } catch (error) {
+        console.error('Error submitting RSVP:', error);
+        showMessage('Error', 'Failed to submit your RSVP. Please try again or contact the couple.');
+    }
 }
 
 // Generate a unique code for the guest
