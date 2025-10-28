@@ -11,7 +11,7 @@ const rsvpOptions = document.querySelectorAll('.rsvp-option');
 const downloadInviteBtn = document.getElementById('downloadInvite');
 const scrollDown = document.querySelector('.scroll-down');
 
-// Initialize Firestore
+// Firestore settings
 db.settings({ timestampsInSnapshots: true });
 
 // Track current guest and guest list
@@ -361,3 +361,22 @@ window.addEventListener('load', () => {
     document.body.style.transition = 'opacity 0.5s ease-in';
     document.body.style.opacity = '1';
 });
+
+// ============== FIRESTORE HELPERS ==============
+// 1. Search for a guest by first+last name (case-insensitive)
+async function getGuest(first, last) {
+  const snap = await db.collection('guests')
+                       .where('first', '==', first.trim().toLowerCase())
+                       .where('last', '==', last.trim().toLowerCase())
+                       .limit(1)
+                       .get();
+  return snap.empty ? null : snap.docs[0].data();
+}
+
+// 2. Save or update an RSVP document
+async function submitRsvp(data) {
+  // data = {name:string, attending:bool, plusOne:bool, diet:string}
+  const id = data.name.toLowerCase().replace(/\s+/g,'-');  // simple key
+  await db.collection('rsvps').doc(id).set(data);
+  return id;
+}
