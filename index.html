@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John & Jane's Wedding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-logo">J&J</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#story">Our Story</a>
+                <a href="#details">Details</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#rsvp" class="rsvp-btn">RSVP</a>
+                <a href="admin.html" class="admin-btn"><i class="fas fa-lock"></i></a>
+            </div>
+            <button class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="hero">
+        <div class="hero-content">
+            <h1>John <span>&</span> Jane</h1>
+            <p class="date">June 12, 2025</p>
+            <p class="location">The Grand Ballroom, New York</p>
+            <a href="#rsvp" class="cta-button">RSVP Now</a>
+        </div>
+        <div class="scroll-down">
+            <span>Scroll Down</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <!-- Our Story -->
+    <section id="story" class="section">
+        <div class="container">
+            <h2>Our Story</h2>
+            <div class="story-content">
+                <div class="story-text">
+                    <p>We met in the spring of 2018 at a mutual friend's party. It was one of those rare moments when you just know. After years of adventures, laughter, and growing together, we can't wait to start this new chapter of our lives.</p>
+                    <p>We're so excited to celebrate our love with all of you!</p>
+                </div>
+                <div class="story-image">
+                    <img src="images/couple.jpg" alt="John and Jane">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Details -->
+    <section id="details" class="section">
+        <div class="container">
+            <h2>Wedding Details</h2>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <i class="far fa-calendar-alt"></i>
+                    <h3>When</h3>
+                    <p>Saturday, June 12, 2025</p>
+                    <p>Ceremony: 4:00 PM</p>
+                    <p>Reception to follow</p>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Where</h3>
+                    <p>The Grand Ballroom</p>
+                    <p>123 Wedding Lane</p>
+                    <p>New York, NY 10001</p>
+                </div>
+                <div class="detail-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>Dinner & Drinks</h3>
+                    <p>Cocktail hour with passed hors d'oeuvres</p>
+                    <p>Plated dinner with wine pairings</p>
+                    <p>Late-night snacks and dancing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery" class="section">
+        <div class="container">
+            <h2>Our Moments</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="images/gallery/1.jpg" alt="Gallery 1"></div>
+                <div class="gallery-item"><img src="images/gallery/2.jpg" alt="Gallery 2"></div>
+                <div class="gallery-item"><img src="images/gallery/3.jpg" alt="Gallery 3"></div>
+                <div class="gallery-item"><img src="images/gallery/4.jpg" alt="Gallery 4"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="section">
+        <div class="container">
+            <h2>RSVP</h2>
+            <div class="rsvp-container">
+                <div class="rsvp-form">
+                    <h3>Find Your Invitation</h3>
+                    <div class="form-group">
+                        <input type="text" id="guestSearch" placeholder="Search your name..." autocomplete="off">
+                        <div id="searchResults" class="search-results"></div>
+                    </div>
+                    
+                    <!-- RSVP Form (initially hidden) -->
+                    <div id="rsvpForm" class="hidden">
+                        <h3 id="guestGreeting">Hello, <span id="guestName"></span>!</h3>
+                        <p>Will you be attending our wedding?</p>
+                        <div class="rsvp-options">
+                            <button class="rsvp-option" data-rsvp="attending">
+                                <i class="fas fa-check"></i> I'll be there!
+                            </button>
+                            <button class="rsvp-option" data-rsvp="not_attending">
+                                <i class="fas fa-times"></i> Regretfully decline
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Success Message (initially hidden) -->
+                    <div id="rsvpSuccess" class="hidden">
+                        <div class="success-message">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Thank you for your RSVP!</h3>
+                            <p>Your response has been recorded. We can't wait to celebrate with you!</p>
+                            <button id="downloadInvite" class="cta-button">
+                                <i class="fas fa-download"></i> Download Your Invitation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>With love, John & Jane</p>
+            <p class="copyright">© 2025 John & Jane's Wedding. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
