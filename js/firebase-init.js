@@ -10,17 +10,33 @@ if (!firebase.apps.length) {
     appId: "1:531969671313:web:cb143efde641d92fecff30"
   };
 
-  // Initialize Firebase with settings
+  // Initialize Firebase
   const app = firebase.initializeApp(firebaseConfig);
+  
+  // Configure Firestore with modern cache settings
+  const firestoreSettings = {
+    cache: {
+      // Use the new cache configuration
+      kind: 'persistent',
+      tabManager: 'multi-tab',
+      cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
+    },
+    experimentalForceLongPolling: true
+  };
   
   // Initialize Firestore with settings
   const db = firebase.firestore();
   
+  // Apply settings with merge: true to avoid host override warning
+  db.settings(firestoreSettings, { merge: true });
+  
   // Make db available globally
   window.db = db;
   
-  // Only set up persistence if in browser environment
+  // Configure offline persistence using the new approach
   if (typeof window !== 'undefined') {
+    // The persistence is now handled by the cache settings above
+    // This is just for backward compatibility and error handling
     db.enablePersistence()
       .catch(err => {
         if (err.code === 'failed-precondition') {
