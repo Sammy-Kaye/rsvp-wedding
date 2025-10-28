@@ -11,40 +11,31 @@ if (!firebase.apps.length) {
   };
 
   // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
   
-  // Configure Firestore with modern cache settings
-  const firestoreSettings = {
-    cache: {
-      // Use the new cache configuration
-      kind: 'persistent',
-      tabManager: 'multi-tab',
-      cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
-    },
-    experimentalForceLongPolling: true
-  };
-  
-  // Initialize Firestore with settings
+  // Get Firestore instance
   const db = firebase.firestore();
   
-  // Apply settings with merge: true to avoid host override warning
-  db.settings(firestoreSettings, { merge: true });
+  // Configure Firestore settings (only call settings() once!)
+  db.settings({
+    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+    experimentalForceLongPolling: true
+  });
   
   // Make db available globally
   window.db = db;
   
-  // Configure offline persistence using the new approach
+  // Configure offline persistence (this is the correct v8 way)
   if (typeof window !== 'undefined') {
-    // The persistence is now handled by the cache settings above
-    // This is just for backward compatibility and error handling
-    db.enablePersistence()
+    db.enablePersistence({ synchronizeTabs: true })
       .catch(err => {
         if (err.code === 'failed-precondition') {
           console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
         } else if (err.code === 'unimplemented') {
           console.warn('The current browser does not support offline persistence.');
+        } else {
+          console.error('Firebase persistence error:', err);
         }
-        console.error('Firebase persistence error:', err);
       });
   }
 } else {
