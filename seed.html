@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed Firestore</title>
+</head>
+<body>
+    <h1>Seeding Firestore with Guest List</h1>
+    <p>Open the browser console to see the progress.</p>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
+    <!-- Firebase Init -->
+    <script src="js/firebase-init.js"></script>
+
+    <!-- Seed Script -->
+    <script src="js/seed.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (confirm('Are you sure you want to seed the database with the guest list? This will add all guests from the GUEST_LIST array in seed.js.')) {
+                seedGuests().then(() => {
+                    alert('Successfully seeded the guest list!');
+                }).catch(error => {
+                    console.error('Error seeding guests:', error);
+                    alert('There was an error seeding the guest list. Check the console for details.');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

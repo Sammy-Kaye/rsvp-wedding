@@ -1,5 +1,5 @@
 // Admin Panel JS
-const loginForm = document.getElementById('loginForm');
+const loginBtn = document.getElementById('loginBtn');
 const loginError = document.getElementById('loginError');
 const dashboard = document.getElementById('dashboard');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -34,12 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Login form submission
-if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+// Login button click
+if (loginBtn) {
+    loginBtn.addEventListener('click', () => {
         const password = document.getElementById('password').value.trim();
-        
+
         if (password === ADMIN_PASSWORD) {
             localStorage.setItem('adminLoggedIn', 'true');
             showDashboard();
