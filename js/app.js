@@ -267,6 +267,11 @@ if (downloadInviteBtn) {
         }
 
         const invitationContent = document.getElementById('invitationContent');
+        if (!invitationContent) {
+            console.error('invitationContent element not found.');
+            alert('Required elements for invitation generation are missing. Please contact the couple.');
+            return;
+        }
         const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.png`;
 
         try {
