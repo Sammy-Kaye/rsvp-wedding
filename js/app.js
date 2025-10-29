@@ -260,53 +260,82 @@ if (downloadInviteBtn) {
     downloadInviteBtn.addEventListener('click', async () => {
         console.log('Download invite button clicked');
         console.log('Current guest:', currentGuest);
-        if (!currentGuest) {
-            console.error('No guest selected');
+        
+        if (!currentGuest || !currentGuest.name || !currentGuest.code) {
+            console.error('No guest selected or guest data incomplete');
             alert('Please select a guest first');
             return;
         }
 
-        const invitationContent = document.getElementById('invitationContent');
-        if (!invitationContent) {
-            console.error('invitationContent element not found.');
-            alert('Required elements for invitation generation are missing. Please contact the couple.');
-            return;
+        // Show the modal first
+        if (invitationModal) {
+            invitationModal.style.display = 'flex';
         }
-        const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.png`;
 
-        try {
-            // Populate the hidden invitation content div
-            const pdfGuestNameElement = document.getElementById('pdfGuestName');
-            const pdfRsvpCodeElement = document.getElementById('pdfRsvpCode');
-
-            console.log('pdfGuestNameElement:', pdfGuestNameElement);
-            console.log('pdfRsvpCodeElement:', pdfRsvpCodeElement);
-
-            if (!pdfGuestNameElement || !pdfRsvpCodeElement) {
-                console.error('Missing required elements inside invitationContent.');
-                alert('Required elements for invitation generation are missing. Please contact the couple.');
+        // Small delay to ensure DOM is updated
+        setTimeout(async () => {
+            const invitationContent = document.getElementById('invitationContent');
+            if (!invitationContent) {
+                console.error('invitationContent element not found in DOM');
+                alert('Error: Could not load invitation. Please refresh the page and try again.');
                 return;
             }
 
-            pdfGuestNameElement.textContent = currentGuest.name;
-            pdfRsvpCodeElement.textContent = currentGuest.code;
-
-            // Generate QR code
-            qrcodeContainer.innerHTML = ''; // Clear previous QR code
-            new QRCode(qrcodeContainer, {
-                text: currentGuest.code,
-                width: 128,
-                height: 128,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-
-            // Temporarily show the invitation content for image generation
+            // Make sure the content is visible for html2canvas
             invitationContent.style.display = 'block';
+            
+            const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.png`;
+            const qrcodeContainer = document.getElementById('qrcodeContainer');
+
+            try {
+                // Use more specific selectors that match your HTML structure
+                const pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
+                const pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
+
+                console.log('PDF Elements:', {
+                    pdfGuestNameElement: pdfGuestNameElement ? 'Found' : 'Not found',
+                    pdfRsvpCodeElement: pdfRsvpCodeElement ? 'Found' : 'Not found',
+                    qrcodeContainer: qrcodeContainer ? 'Found' : 'Not found'
+                });
+
+                if (!pdfGuestNameElement || !pdfRsvpCodeElement || !qrcodeContainer) {
+                    const missingElements = [
+                        !pdfGuestNameElement ? 'Guest Name' : null,
+                        !pdfRsvpCodeElement ? 'RSVP Code' : null,
+                        !qrcodeContainer ? 'QR Code Container' : null
+                    ].filter(Boolean);
+                    
+                    console.error('Missing required elements:', missingElements);
+                    alert(`Error: Could not generate invitation. Missing: ${missingElements.join(', ')}`);
+                    return;
+                }
+
+                // Update the elements
+                pdfGuestNameElement.textContent = currentGuest.name;
+                pdfRsvpCodeElement.textContent = currentGuest.code;
+
+                // Generate QR code
+                qrcodeContainer.innerHTML = ''; // Clear previous QR code
+                try {
+                    new QRCode(qrcodeContainer, {
+                        text: currentGuest.code,
+                        width: 128,
+                        height: 128,
+                        colorDark: '#000000',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } catch (qrError) {
+                    console.error('Error generating QR code:', qrError);
+                    alert('Error generating QR code. Please try again.');
+                    return;
+                }
+
+                // Temporarily show the invitation content for image generation
+                invitationContent.style.display = 'block';
                         
-            // Wait for QR code to render and content to be fully visible
-            await new Promise(resolve => setTimeout(resolve, 1000)); 
+                // Wait for QR code to render and content to be fully visible
+                await new Promise(resolve => setTimeout(resolve, 1000)); 
                         
             html2canvas(invitationContent).then(canvas => {
                 const imageDataURL = canvas.toDataURL('image/png');
