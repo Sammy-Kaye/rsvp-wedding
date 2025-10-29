@@ -235,8 +235,15 @@ async function submitRSVP(response) {
         codeElement.style.color = 'var(--primary-color)';
         codeElement.textContent = `Your RSVP Code: ${uniqueCode}`;
         
-        const successContent = document.querySelector('.success-message p:last-child');
-        successContent.parentNode.insertBefore(codeElement, successContent);
+        const successMessage = document.querySelector('.success-message');
+        const downloadButton = document.getElementById('downloadInvite');
+        successMessage.insertBefore(codeElement, downloadButton);
+
+        if (response === 'attending') {
+            downloadButton.style.display = 'block';
+        } else {
+            downloadButton.style.display = 'none';
+        }
         
     } catch (error) {
         console.error('Error submitting RSVP:', error);
@@ -245,10 +252,13 @@ async function submitRSVP(response) {
 }
 
 // Generate a unique code for the guest
-function generateUniqueCode(guestId) {
-    const prefix = 'WED';
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    return `${prefix}${guestId.toString().padStart(3, '0')}${randomNum}`;
+function generateUniqueCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 6; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
 }
 
 // Download invitation PDF
@@ -257,6 +267,12 @@ if (downloadInviteBtn) {
         if (!currentGuest) return;
 
         try {
+            if (typeof QRCode === 'undefined') {
+                console.error('QRCode library is not loaded.');
+                alert('Failed to generate PDF invitation. QRCode library is missing.');
+                return;
+            }
+
             // Create PDF document
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
