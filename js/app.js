@@ -129,15 +129,6 @@ function displaySearchResults(guests) {
             guestElement.textContent = guest.name;
             guestElement.dataset.id = guest.id;
             
-            // Show RSVP status if already responded
-            if (guest.rsvp !== 'pending') {
-                const status = document.createElement('span');
-                status.textContent = ` (${guest.rsvp === 'attending' ? '✓ Attending' : '✗ Not Attending'})`;
-                status.style.marginLeft = '10px';
-                status.style.color = guest.rsvp === 'attending' ? 'green' : 'red';
-                guestElement.appendChild(status);
-            }
-            
             guestElement.style.padding = '10px 15px';
             guestElement.style.cursor = 'pointer';
             guestElement.style.transition = 'background-color 0.2s';
@@ -176,10 +167,8 @@ async function selectGuest(guest) {
         // Check if guest has already RSVP'd
         if (guestData.rsvp !== 'pending') {
             showMessage(
-                'RSVP Already Submitted', 
+                'RSVP Already Submitted',
                 `It looks like ${guestData.name} has already submitted an RSVP.\n\n` +
-                `Status: ${guestData.rsvp === 'attending' ? '✓ Attending' : '✗ Not Attending'}\n` +
-                `Response Date: ${new Date(guestData.lastUpdated?.toDate()).toLocaleDateString()}\n\n` +
                 'Please contact the couple if you believe this is an error.'
             );
             return;
