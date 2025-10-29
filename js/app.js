@@ -4,6 +4,8 @@ const navLinks = document.querySelector('.nav-links');
 const nav = document.querySelector('nav');
 const guestSearch = document.getElementById('guestSearch');
 const searchResults = document.getElementById('searchResults');
+let allGuests = []; // Initialize guests array
+const searchResults = document.getElementById('searchResults');
 const rsvpForm = document.getElementById('rsvpForm');
 const rsvpSuccess = document.getElementById('rsvpSuccess');
 const guestNameElement = document.getElementById('guestName');
@@ -23,16 +25,52 @@ let currentGuest = null;
 let allGuests = [];
 
 // Load all guests from Firestore on page load
-document.addEventListener('DOMContentLoaded', loadAllGuests);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM fully loaded, initializing...');
+    loadAllGuests().then(() => {
+        console.log('Guests loaded successfully. Total guests:', allGuests.length);
+        
+        // Test search after loading
+        if (guestSearch) {
+            console.log('Adding input event listener to search field');
+            guestSearch.addEventListener('input', debounce(handleGuestSearch, 300));
+        } else {
+            console.error('Search input field not found!');
+        }
+    }).catch(error => {
+        console.error('Failed to load guests:', error);
+    });
+});
 
 async function loadAllGuests() {
     try {
+        console.log('Loading guests from Firestore...');
         const querySnapshot = await db.collection('guests').get();
+        
+        if (querySnapshot.empty) {
+            console.warn('No guest documents found in Firestore');
+            return;
+        }
+        
+        allGuests = []; // Reset the array
         querySnapshot.forEach((doc) => {
-            allGuests.push({ id: doc.id, ...doc.data() });
+            const guestData = { id: doc.id, ...doc.data() };
+            allGuests.push(guestData);
         });
+        
+        console.log(`Successfully loaded ${allGuests.length} guests`);
+        
+        // Test if we can find some elements
+        console.log('Testing DOM elements:', {
+            guestSearch: !!guestSearch,
+            searchResults: !!searchResults,
+            rsvpForm: !!rsvpForm
+        });
+        
+        return allGuests;
     } catch (error) {
         console.error('Error loading all guests:', error);
+        throw error; // Re-throw to allow proper error handling
     }
 }
 
@@ -50,8 +88,7 @@ function debounce(func, wait) {
     };
 }
 
-// Listen for guest search input
-guestSearch.addEventListener('input', debounce(handleGuestSearch, 300));
+// Search input event listener is now added after guests are loaded
 
 // Handle guest search
 function handleGuestSearch(e) {
