@@ -267,14 +267,13 @@ if (downloadInviteBtn) {
         if (!currentGuest) return;
 
         try {
-            if (typeof QRCode === 'undefined') {
-                console.error('QRCode library is not loaded.');
-                alert('Failed to generate PDF invitation. QRCode library is missing.');
+            // Create PDF document using jsPDF from global scope
+            if (typeof jsPDF === 'undefined') {
+                console.error('jsPDF library is not loaded.');
+                alert('Failed to generate PDF invitation. PDF library is missing.');
                 return;
             }
 
-            // Create PDF document
-            const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
             // Add title
@@ -291,6 +290,7 @@ if (downloadInviteBtn) {
             doc.text(`RSVP Code: ${currentGuest.code}`, 20, 75);
 
             // Wedding details
+            doc.setFontSize(12);
             doc.text('We cordially invite you to celebrate our marriage', 20, 95);
 
             doc.setFontSize(16);
@@ -303,19 +303,17 @@ if (downloadInviteBtn) {
             doc.text('123 Wedding Lane', 105, 180, { align: 'center' });
             doc.text('New York, NY 10001', 105, 195, { align: 'center' });
 
-            // Generate QR code
-            const qrCodeDataURL = await QRCode.toDataURL(currentGuest.code, { width: 150, height: 150 });
-
-            // Add QR code to PDF
-            doc.addImage(qrCodeDataURL, 'PNG', 170, 60, 30, 30);
-
-            doc.setFontSize(10);
-            doc.text('Scan QR code or present this invitation', 170, 95, { align: 'center' });
+            // For now, create a simple QR code representation with text
+            doc.setFontSize(12);
+            doc.text('RSVP Code for Entry:', 20, 220);
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text(currentGuest.code, 20, 235);
 
             // Additional instructions
             doc.setFontSize(12);
-            doc.text('Please bring this invitation to the venue.', 20, 220);
-            doc.text('This document serves as proof of RSVP.', 20, 235);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Present your RSVP code at the venue entrance.', 20, 255);
 
             // Save the PDF
             const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.pdf`;
