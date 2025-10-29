@@ -15,6 +15,22 @@ const scrollDown = document.querySelector('.scroll-down');
 
 // Track current guest
 let currentGuest = null;
+let allGuests = [];
+
+// Load all guests from Firestore on page load
+document.addEventListener('DOMContentLoaded', loadAllGuests);
+
+async function loadAllGuests() {
+    try {
+        const querySnapshot = await db.collection('guests').get();
+        querySnapshot.forEach((doc) => {
+            allGuests.push({ id: doc.id, ...doc.data() });
+        });
+    } catch (error) {
+        console.error('Error loading all guests:', error);
+    }
+}
+
 
 // Debounce function to limit API calls
 function debounce(func, wait) {
@@ -33,32 +49,22 @@ function debounce(func, wait) {
 guestSearch.addEventListener('input', debounce(handleGuestSearch, 300));
 
 // Handle guest search
-async function handleGuestSearch(e) {
+function handleGuestSearch(e) {
     const searchTerm = e.target.value.trim().toLowerCase();
     
-    if (searchTerm.length < 2) {
+    if (searchTerm.length < 1) {
         searchResults.innerHTML = '';
         searchResults.classList.remove('active');
         return;
     }
     
-    try {
-        const guestsRef = db.collection('guests');
-        const snapshot = await guestsRef
-            .where('searchTerms', 'array-contains', searchTerm)
-            .limit(10)
-            .get();
-            
-        const matches = [];
-        snapshot.forEach(doc => {
-            matches.push({ id: doc.id, ...doc.data() });
-        });
-        
-        displaySearchResults(matches);
-    } catch (error) {
-        console.error('Error searching guests:', error);
-        showMessage('Error', 'Failed to search guests. Please try again.');
-    }
+    const matches = allGuests.filter(guest => {
+        const name = guest.name.toLowerCase();
+        const searchTerms = guest.searchTerms.join(' ').toLowerCase();
+        return name.includes(searchTerm) || searchTerms.includes(searchTerm);
+    }).slice(0, 10);
+    
+    displaySearchResults(matches);
 }
 
 // Mobile Menu Toggle

@@ -181,14 +181,14 @@ async function seedGuests() {
 
     for (const guest of GUEST_LIST) {
       const docRef = guestsCollection.doc(); // Automatically generate a new ID
-      batch.set(docRef, {
-        ...guest,
-        rsvp: 'pending',
-        code: generateUniqueCode(),
-        lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      count++;
+          const { id, ...guestData } = guest;
+          batch.set(docRef, {
+            ...guestData,
+            rsvp: 'pending',
+            code: generateUniqueCode(),
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });      count++;
       if (count % 500 === 0) {
         await batch.commit();
         batch = db.batch();
