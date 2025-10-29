@@ -8,6 +8,16 @@ const exportBtn = document.getElementById('exportBtn');
 const searchInput = document.getElementById('searchGuest');
 const guestsTableBody = document.getElementById('guestsTableBody');
 
+// Add Guest Modal Elements
+const addGuestBtn = document.getElementById('addGuestBtn');
+const addGuestModal = document.getElementById('addGuestModal');
+const addGuestForm = document.getElementById('addGuestForm');
+const guestNameInput = document.getElementById('guestName');
+const guestEmailInput = document.getElementById('guestEmail');
+const guestNotesInput = document.getElementById('guestNotes');
+const closeModalBtn = document.querySelector('.close-modal');
+const cancelAddGuestBtn = document.getElementById('cancelAddGuest');
+
 // Stats elements
 const totalGuestsEl = document.getElementById('totalGuests');
 const attendingCountEl = document.getElementById('attendingCount');
@@ -305,4 +315,93 @@ function debounce(func, wait) {
 // Show a message to the user
 function showMessage(title, message) {
     alert(`${title}\n\n${message}`);
+}
+
+// Add Guest Modal Functions
+if (addGuestBtn) {
+    addGuestBtn.addEventListener('click', () => {
+        addGuestModal.classList.remove('hidden');
+        guestNameInput.focus();
+    });
+}
+
+if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', closeAddGuestModal);
+}
+
+if (cancelAddGuestBtn) {
+    cancelAddGuestBtn.addEventListener('click', closeAddGuestModal);
+}
+
+if (addGuestForm) {
+    addGuestForm.addEventListener('submit', handleAddGuest);
+}
+
+// Close modal when clicking outside
+if (addGuestModal) {
+    addGuestModal.addEventListener('click', (e) => {
+        if (e.target === addGuestModal) {
+            closeAddGuestModal();
+        }
+    });
+}
+
+function closeAddGuestModal() {
+    addGuestModal.classList.add('hidden');
+    addGuestForm.reset();
+}
+
+async function handleAddGuest(e) {
+    e.preventDefault();
+
+    const name = guestNameInput.value.trim();
+    const email = guestEmailInput.value.trim();
+    const notes = guestNotesInput.value.trim();
+
+    if (!name) {
+        alert('Please enter a guest name.');
+        guestNameInput.focus();
+        return;
+    }
+
+    try {
+        // Check if guest already exists
+        const existingGuest = await db.collection('guests')
+            .where('name', '==', name)
+            .get();
+
+        if (!existingGuest.empty) {
+            alert('A guest with this name already exists.');
+            guestNameInput.focus();
+            return;
+        }
+
+        // Add new guest to Firestore
+        const guestData = {
+            name: name,
+            email: email || null,
+            notes: notes || null,
+            rsvp: 'pending',
+            code: generateUniqueCode(),
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        await db.collection('guests').add(guestData);
+
+        alert('Guest added successfully!');
+        closeAddGuestModal();
+        loadGuestData(); // Refresh the table
+
+    } catch (error) {
+        console.error('Error adding guest:', error);
+        alert('Failed to add guest. Please try again.');
+    }
+}
+
+function generateUniqueCode() {
+    const prefix = 'WED';
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const timestamp = Date.now().toString().slice(-4);
+    return `${prefix}${randomNum}${timestamp}`;
 }
