@@ -279,6 +279,9 @@ if (downloadInviteBtn) {
             const pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
             const pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
 
+            console.log('pdfGuestNameElement:', pdfGuestNameElement);
+            console.log('pdfRsvpCodeElement:', pdfRsvpCodeElement);
+
             if (!pdfGuestNameElement || !pdfRsvpCodeElement) {
                 console.error('Missing required elements inside invitationContent.');
                 alert('Required elements for invitation generation are missing. Please contact the couple.');
