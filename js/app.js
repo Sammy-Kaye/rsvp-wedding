@@ -14,12 +14,8 @@ const scrollDown = document.querySelector('.scroll-down');
 // Firestore settings
 db.settings({ timestampsInSnapshots: true });
 
-// Track current guest and guest list
+// Track current guest
 let currentGuest = null;
-let guestList = [];
-
-// Listen for guest search input
-guestSearch.addEventListener('input', debounce(handleGuestSearch, 300));
 
 // Debounce function to limit API calls
 function debounce(func, wait) {
@@ -33,6 +29,9 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
+
+// Listen for guest search input
+guestSearch.addEventListener('input', debounce(handleGuestSearch, 300));
 
 // Handle guest search
 async function handleGuestSearch(e) {
@@ -103,24 +102,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             });
         }
     });
-});
-
-// Search functionality
-guestSearch.addEventListener('input', (e) => {
-    const searchTerm = e.target.value.trim().toLowerCase();
-    
-    if (searchTerm.length < 2) {
-        searchResults.innerHTML = '';
-        searchResults.classList.remove('active');
-        return;
-    }
-    
-    const matches = guestList.filter(guest => 
-        guest.name.toLowerCase().includes(searchTerm) ||
-        guest.email.toLowerCase().includes(searchTerm)
-    );
-    
-    displaySearchResults(matches);
 });
 
 // Display search results
