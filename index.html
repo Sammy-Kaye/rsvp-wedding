@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>John & Jane's Wedding</title>
+    <title data-translate="page_title">John & Jane's Wedding</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -16,12 +16,16 @@
         <div class="container">
             <div class="nav-logo">J&J</div>
             <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#story">Our Story</a>
-                <a href="#details">Details</a>
-                <a href="#gallery">Gallery</a>
-                <a href="#rsvp" class="rsvp-btn">RSVP</a>
+                <a href="#home" data-translate="nav_home">Home</a>
+                <a href="#story" data-translate="nav_story">Our Story</a>
+                <a href="#details" data-translate="nav_details">Details</a>
+                <a href="#gallery" data-translate="nav_gallery">Gallery</a>
+                <a href="#rsvp" class="rsvp-btn" data-translate="nav_rsvp">RSVP</a>
                 <a href="admin.html" class="admin-btn"><i class="fas fa-lock"></i></a>
+                <div class="lang-toggle">
+                    <button id="langToggleEn" class="lang-button">EN</button>
+                    <button id="langToggleFr" class="lang-button">FR</button>
+                </div>
             </div>
             <button class="mobile-menu-btn">
                 <span></span>
@@ -35,12 +39,12 @@
     <header id="home" class="hero">
         <div class="hero-content">
             <h1>John <span>&</span> Jane</h1>
-            <p class="date">June 12, 2025</p>
-            <p class="location">The Grand Ballroom, New York</p>
-            <a href="#rsvp" class="cta-button">RSVP Now</a>
+            <p class="date" data-translate="hero_date">June 12, 2025</p>
+            <p class="location" data-translate="hero_location">The Grand Ballroom, New York</p>
+            <a href="#rsvp" class="cta-button" data-translate="hero_cta">RSVP Now</a>
         </div>
         <div class="scroll-down">
-            <span>Scroll Down</span>
+            <span data-translate="scroll_down">Scroll Down</span>
             <i class="fas fa-chevron-down"></i>
         </div>
     </header>
@@ -48,11 +52,11 @@
     <!-- Our Story -->
     <section id="story" class="section">
         <div class="container">
-            <h2>Our Story</h2>
+            <h2 data-translate="story_title">Our Story</h2>
             <div class="story-content">
                 <div class="story-text">
-                    <p>We met in the spring of 2018 at a mutual friend's party. It was one of those rare moments when you just know. After years of adventures, laughter, and growing together, we can't wait to start this new chapter of our lives.</p>
-                    <p>We're so excited to celebrate our love with all of you!</p>
+                    <p data-translate="story_p1">We met in the spring of 2018 at a mutual friend's party. It was one of those rare moments when you just know. After years of adventures, laughter, and growing together, we can't wait to start this new chapter of our lives.</p>
+                    <p data-translate="story_p2">We're so excited to celebrate our love with all of you!</p>
                 </div>
                 <div class="story-image">
                     <img src="images/couple.jpg" alt="John and Jane">
@@ -64,28 +68,28 @@
     <!-- Event Details -->
     <section id="details" class="section">
         <div class="container">
-            <h2>Wedding Details</h2>
+            <h2 data-translate="details_title">Wedding Details</h2>
             <div class="details-grid">
                 <div class="detail-card">
                     <i class="far fa-calendar-alt"></i>
-                    <h3>When</h3>
-                    <p>Saturday, June 12, 2025</p>
-                    <p>Ceremony: 4:00 PM</p>
-                    <p>Reception to follow</p>
+                    <h3 data-translate="details_when">When</h3>
+                    <p data-translate="details_when_date">Saturday, June 12, 2025</p>
+                    <p data-translate="details_when_ceremony">Ceremony: 4:00 PM</p>
+                    <p data-translate="details_when_reception">Reception to follow</p>
                 </div>
                 <div class="detail-card">
                     <i class="fas fa-map-marker-alt"></i>
-                    <h3>Where</h3>
-                    <p>The Grand Ballroom</p>
-                    <p>123 Wedding Lane</p>
-                    <p>New York, NY 10001</p>
+                    <h3 data-translate="details_where">Where</h3>
+                    <p data-translate="details_where_venue">The Grand Ballroom</p>
+                    <p data-translate="details_where_address1">123 Wedding Lane</p>
+                    <p data-translate="details_where_address2">New York, NY 10001</p>
                 </div>
                 <div class="detail-card">
                     <i class="fas fa-utensils"></i>
-                    <h3>Dinner & Drinks</h3>
-                    <p>Cocktail hour with passed hors d'oeuvres</p>
-                    <p>Plated dinner with wine pairings</p>
-                    <p>Late-night snacks and dancing</p>
+                    <h3 data-translate="details_food_drinks">Dinner & Drinks</h3>
+                    <p data-translate="details_food_drinks_p1">Cocktail hour with passed hors d'oeuvres</p>
+                    <p data-translate="details_food_drinks_p2">Plated dinner with wine pairings</p>
+                    <p data-translate="details_food_drinks_p3">Late-night snacks and dancing</p>
                 </div>
             </div>
         </div>
@@ -94,7 +98,7 @@
     <!-- Gallery -->
     <section id="gallery" class="section">
         <div class="container">
-            <h2>Our Moments</h2>
+            <h2 data-translate="gallery_title">Our Moments</h2>
             <div class="gallery-grid">
                 <div class="gallery-item"><img src="images/gallery/1.jpg" alt="Gallery 1"></div>
                 <div class="gallery-item"><img src="images/gallery/2.jpg" alt="Gallery 2"></div>
@@ -107,25 +111,25 @@
     <!-- RSVP Section -->
     <section id="rsvp" class="section">
         <div class="container">
-            <h2>RSVP</h2>
+            <h2 data-translate="rsvp_title">RSVP</h2>
             <div class="rsvp-container">
                 <div class="rsvp-form">
-                    <h3>Find Your Invitation</h3>
+                    <h3 data-translate="rsvp_find_invitation">Find Your Invitation</h3>
                     <div class="form-group">
-                        <input type="text" id="guestSearch" placeholder="Search your name..." autocomplete="off">
+                        <input type="text" id="guestSearch" data-translate="rsvp_search_placeholder" placeholder="Search your name..." autocomplete="off">
                         <div id="searchResults" class="search-results"></div>
                     </div>
                     
                     <!-- RSVP Form (initially hidden) -->
                     <div id="rsvpForm" class="hidden">
-                        <h3 id="guestGreeting">Hello, <span id="guestName"></span>!</h3>
-                        <p>Will you be attending our wedding?</p>
+                        <h3 id="guestGreeting"><span data-translate="rsvp_hello">Hello, </span><span id="guestName"></span>!</h3>
+                        <p data-translate="rsvp_attending_question">Will you be attending our wedding?</p>
                         <div class="rsvp-options">
                             <button class="rsvp-option" data-rsvp="attending">
-                                <i class="fas fa-check"></i> I'll be there!
+                                <i class="fas fa-check"></i> <span data-translate="rsvp_attending_yes">I'll be there!</span>
                             </button>
                             <button class="rsvp-option" data-rsvp="not_attending">
-                                <i class="fas fa-times"></i> Regretfully decline
+                                <i class="fas fa-times"></i> <span data-translate="rsvp_attending_no">Regretfully decline</span>
                             </button>
                         </div>
                     </div>
@@ -134,10 +138,10 @@
                     <div id="rsvpSuccess" class="hidden">
                         <div class="success-message">
                             <i class="fas fa-check-circle"></i>
-                            <h3>Thank you for your RSVP!</h3>
-                            <p>Your response has been recorded. We can't wait to celebrate with you!</p>
+                            <h3 data-translate="rsvp_success_title">Thank you for your RSVP!</h3>
+                            <p data-translate="rsvp_success_message">Your response has been recorded. We can't wait to celebrate with you!</p>
                             <button id="downloadInvite" class="cta-button">
-                                <i class="fas fa-download"></i> View/Download Invitation
+                                <i class="fas fa-download"></i> <span data-translate="rsvp_view_download_btn">View/Download Invitation</span>
                             </button>
                         </div>
                     </div>
@@ -146,34 +150,34 @@
                     <div id="invitationModal" class="modal">
                         <div class="modal-content">
                             <span class="close-button">&times;</span>
-                            <h2>Your Wedding Invitation</h2>
-                            <p>You can view your invitation in a new tab or download it directly.</p>
+                            <h2 data-translate="modal_title">Your Wedding Invitation</h2>
+                            <p data-translate="modal_text">You can view your invitation in a new tab or download it directly.</p>
                             <div class="modal-actions">
-                                <button id="viewInvitationBtn" class="cta-button">View Invitation</button>
-                                <button id="downloadInvitationBtn" class="cta-button">Download Invitation</button>
+                                <button id="viewInvitationBtn" class="cta-button" data-translate="modal_view_btn">View Invitation</button>
+                                <button id="downloadInvitationBtn" class="cta-button" data-translate="modal_download_btn">Download Invitation</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Hidden Invitation Content for Image Generation -->
                     <div id="invitationContent" style="display: none; padding: 20px; font-family: 'Montserrat', sans-serif; color: #333;">
-                        <h1 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;">Wedding Invitation</h1>
-                        <h2 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;">John & Jane</h2>
-                        <p style="text-align: center; font-size: 1.1em;">We cordially invite you to celebrate our marriage</p>
-                        <p style="text-align: center; font-size: 1.2em; font-weight: bold;">Guest: <span id="pdfGuestName"></span></p>
-                        <p style="text-align: center; font-size: 1.2em; font-weight: bold;">RSVP Code: <span id="pdfRsvpCode"></span></p>
+                        <h1 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;" data-translate="invitation_title">Wedding Invitation</h1>
+                        <h2 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;" data-translate="invitation_couple_names">John & Jane</h2>
+                        <p style="text-align: center; font-size: 1.1em;" data-translate="invitation_message">We cordially invite you to celebrate our marriage</p>
+                        <p style="text-align: center; font-size: 1.2em; font-weight: bold;" data-translate="invitation_guest">Guest: <span id="pdfGuestName"></span></p>
+                        <p style="text-align: center; font-size: 1.2em; font-weight: bold;" data-translate="invitation_rsvp_code">RSVP Code: <span id="pdfRsvpCode"></span></p>
                         
-                        <h3 style="text-align: center; color: #8B4513;">Ceremony & Reception</h3>
-                        <p style="text-align: center;">Saturday, June 12, 2025</p>
-                        <p style="text-align: center;">4:00 PM Ceremony</p>
-                        <p style="text-align: center;">The Grand Ballroom</p>
-                        <p style="text-align: center;">123 Wedding Lane</p>
-                        <p style="text-align: center;">New York, NY 10001</p>
+                        <h3 style="text-align: center; color: #8B4513;" data-translate="invitation_ceremony_reception">Ceremony & Reception</h3>
+                        <p style="text-align: center;" data-translate="invitation_date">Saturday, June 12, 2025</p>
+                        <p style="text-align: center;" data-translate="invitation_time">4:00 PM Ceremony</p>
+                        <p style="text-align: center;" data-translate="invitation_venue">The Grand Ballroom</p>
+                        <p style="text-align: center;" data-translate="invitation_address1">123 Wedding Lane</p>
+                        <p style="text-align: center;" data-translate="invitation_address2">New York, NY 10001</p>
                         
-                        <div id="qrcodeContainer" style="text-align: center; margin-top: 20px;"></div>
+                        <div id="qrcodeContainer" style="margin: 20px auto;"></div>
                         
-                        <p style="text-align: center; font-size: 0.9em; margin-top: 20px;">Please bring this invitation to the venue.</p>
-                        <p style="text-align: center; font-size: 0.9em;">This document serves as proof of RSVP.</p>
+                        <p style="text-align: center; font-size: 0.9em; margin-top: 20px;" data-translate="invitation_bring_text">Please bring this invitation to the venue.</p>
+                        <p style="text-align: center; font-size: 0.9em;" data-translate="invitation_proof_text">This document serves as proof of RSVP.</p>
                     </div>
                 </div>
             </div>
@@ -183,8 +187,8 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>With love, John & Jane</p>
-            <p class="copyright">© 2025 John & Jane's Wedding. All rights reserved.</p>
+            <p data-translate="footer_love">With love, John & Jane</p>
+            <p class="copyright" data-translate="footer_copyright">© 2025 John & Jane's Wedding. All rights reserved.</p>
         </div>
     </footer>
 
@@ -200,5 +204,7 @@
     <script src="js/firebase-init.js"></script>
     <!-- Your app logic (uses global db) -->
     <script src="js/app.js"></script>
+    <!-- Internationalization -->
+    <script src="js/i18n.js"></script>
 </body>
 </html>
