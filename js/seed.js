@@ -29,25 +29,25 @@ const GUEST_LIST = [
   { id: 26, name: "Jemima", partySize: 1, searchTerms: ["jemima"] },
 
   // Groom's side - Couples
-  { id: 100, name: "Tharcisse Yambayamba", partySize: 2, searchTerms: ["tharcisse", "yambayamba"] },
-  { id: 101, name: "Nicolas Tshilumba", partySize: 2, searchTerms: ["nicolas", "tshilumba"] },
-  { id: 102, name: "Danny Mulamba", partySize: 2, searchTerms: ["danny", "mulamba"] },
-  { id: 103, name: "Polly Mangi", partySize: 2, searchTerms: ["polly", "mangi"] },
-  { id: 104, name: "Nico Kalongo", partySize: 2, searchTerms: ["nico", "kalongo"] },
-  { id: 105, name: "Joshua Lokamba", partySize: 2, searchTerms: ["joshua", "lokamba"] },
-  { id: 106, name: "Guy Kubelua", partySize: 2, searchTerms: ["guy", "kubelua"] },
-  { id: 107, name: "Chance Murula", partySize: 2, searchTerms: ["chance", "murula"] },
-  { id: 108, name: "Christophe Kalenga", partySize: 2, searchTerms: ["christophe", "kalenga"] },
-  { id: 109, name: "Emmanuel Mbiye", partySize: 2, searchTerms: ["emmanuel", "mbiye"] },
-  { id: 110, name: "Faustin Lugoma", partySize: 2, searchTerms: ["faustin", "lugoma"] },
-  { id: 111, name: "Jean-luc Kadima", partySize: 2, searchTerms: ["jean-luc", "kadima"] },
-  { id: 112, name: "Mbayo Muyembe", partySize: 2, searchTerms: ["mbayo", "muyembe"] },
-  { id: 113, name: "Jermain Mbuyu", partySize: 2, searchTerms: ["jermain", "mbuyu"] },
-  { id: 114, name: "Serge Kalenga", partySize: 2, searchTerms: ["serge", "kalenga"] },
-  { id: 115, name: "Tharcisse Ntunka", partySize: 2, searchTerms: ["tharcisse", "ntunka"] },
-  { id: 116, name: "Joshua Haripersadh", partySize: 2, searchTerms: ["joshua", "haripersadh"] },
-  { id: 117, name: "Laurent Mbiya", partySize: 2, searchTerms: ["laurent", "mbiya"] },
-  { id: 118, name: "Francis Kayamba", partySize: 2, searchTerms: ["francis", "kayamba"] },
+  { id: 100, name: "Couple Tharcisse Yambayamba", partySize: 2, searchTerms: ["couple", "tharcisse", "yambayamba"] },
+  { id: 101, name: "Couple Nicolas Tshilumba", partySize: 2, searchTerms: ["couple", "nicolas", "tshilumba"] },
+  { id: 102, name: "Couple Danny Mulamba", partySize: 2, searchTerms: ["couple", "danny", "mulamba"] },
+  { id: 103, name: "Couple Polly Mangi", partySize: 2, searchTerms: ["couple", "polly", "mangi"] },
+  { id: 104, name: "Couple Nico Kalongo", partySize: 2, searchTerms: ["couple", "nico", "kalongo"] },
+  { id: 105, name: "Couple Joshua Lokamba", partySize: 2, searchTerms: ["couple", "joshua", "lokamba"] },
+  { id: 106, name: "Couple Guy Kubelua", partySize: 2, searchTerms: ["couple", "guy", "kubelua"] },
+  { id: 107, name: "Couple Chance Murula", partySize: 2, searchTerms: ["couple", "chance", "murula"] },
+  { id: 108, name: "Couple Christophe Kalenga", partySize: 2, searchTerms: ["couple", "christophe", "kalenga"] },
+  { id: 109, name: "Couple Emmanuel Mbiye", partySize: 2, searchTerms: ["couple", "emmanuel", "mbiye"] },
+  { id: 110, name: "Couple Faustin Lugoma", partySize: 2, searchTerms: ["couple", "faustin", "lugoma"] },
+  { id: 111, name: "Couple Jean-luc Kadima", partySize: 2, searchTerms: ["couple", "jean-luc", "kadima"] },
+  { id: 112, name: "Couple Mbayo Muyembe", partySize: 2, searchTerms: ["couple", "mbayo", "muyembe"] },
+  { id: 113, name: "Couple Jermain Mbuyu", partySize: 2, searchTerms: ["couple", "jermain", "mbuyu"] },
+  { id: 114, name: "Couple Serge Kalenga", partySize: 2, searchTerms: ["couple", "serge", "kalenga"] },
+  { id: 115, name: "Couple Tharcisse Ntunka", partySize: 2, searchTerms: ["couple", "tharcisse", "ntunka"] },
+  { id: 116, name: "Couple Joshua Haripersadh", partySize: 2, searchTerms: ["couple", "joshua", "haripersadh"] },
+  { id: 117, name: "Couple Laurent Mbiya", partySize: 2, searchTerms: ["couple", "laurent", "mbiya"] },
+  { id: 118, name: "Couple Francis Kayamba", partySize: 2, searchTerms: ["couple", "francis", "kayamba"] },
 
   // Bride's side
   { id: 200, name: "Soeur Monique Mulanga", partySize: 1, searchTerms: ["soeur", "monique", "mulanga"] },
@@ -91,86 +91,119 @@ const GUEST_LIST = [
   { id: 238, name: "Soeur Dorcas Nkulu", partySize: 1, searchTerms: ["soeur", "dorcas", "nkulu"] },
 
   // Bride's side - Couples
-  { id: 300, name: "Didiye Kangudia", partySize: 2, searchTerms: ["didiye", "kangudia"] },
-  { id: 301, name: "Richard Mukeninay", partySize: 2, searchTerms: ["richard", "mukeninay"] },
-  { id: 302, name: "Andri Kayembe", partySize: 2, searchTerms: ["andri", "kayembe"] },
-  { id: 303, name: "Andre Kadima", partySize: 2, searchTerms: ["andre", "kadima"] },
-  { id: 304, name: "Carl Tubadi", partySize: 2, searchTerms: ["carl", "tubadi"] },
-  { id: 305, name: "Philipe Ngoma", partySize: 2, searchTerms: ["philipe", "ngoma"] },
-  { id: 306, name: "Joshua Madi", partySize: 2, searchTerms: ["joshua", "madi"] },
-  { id: 307, name: "Deli Kalonji", partySize: 2, searchTerms: ["deli", "kalonji"] },
-  { id: 308, name: "Jaques Kanda", partySize: 2, searchTerms: ["jaques", "kanda"] },
-  { id: 309, name: "Phinees Ngoie", partySize: 2, searchTerms: ["phinees", "ngoie"] },
-  { id: 310, name: "Joel Mukuna", partySize: 2, searchTerms: ["joel", "mukuna"] },
-  { id: 311, name: "Adonis Ngoie", partySize: 2, searchTerms: ["adonis", "ngoie"] },
-  { id: 312, name: "Seraphin Ngoie", partySize: 2, searchTerms: ["seraphin", "ngoie"] },
-  { id: 313, name: "Ekaka Kangudia", partySize: 2, searchTerms: ["ekaka", "kangudia"] },
-  { id: 314, name: "Bruno Kalala", partySize: 2, searchTerms: ["bruno", "kalala"] },
-  { id: 315, name: "Leonard Kayembe", partySize: 2, searchTerms: ["leonard", "kayembe"] },
-  { id: 316, name: "Olivier Tumba", partySize: 2, searchTerms: ["olivier", "tumba"] },
-  { id: 317, name: "Tatty Mulongoy", partySize: 2, searchTerms: ["tatty", "mulongoy"] },
-  { id: 318, name: "Marc Tshibwabwa", partySize: 2, searchTerms: ["marc", "tshibwabwa"] },
-  { id: 319, name: "Shadrac Ilunga", partySize: 2, searchTerms: ["shadrac", "ilunga"] },
-  { id: 320, name: "Danny Kabemba", partySize: 2, searchTerms: ["danny", "kabemba"] },
-  { id: 321, name: "Daniel Tshibangu", partySize: 2, searchTerms: ["daniel", "tshibangu"] },
-  { id: 322, name: "Christophe Cesar", partySize: 2, searchTerms: ["christophe", "cesar"] },
-  { id: 323, name: "Jean Lubanza", partySize: 2, searchTerms: ["jean", "lubanza"] },
-  { id: 324, name: "Patrick Kalonji", partySize: 2, searchTerms: ["patrick", "kalonji"] },
-  { id: 325, name: "Olivier Odia", partySize: 2, searchTerms: ["olivier", "odia"] },
-  { id: 326, name: "Donat Kahutu", partySize: 2, searchTerms: ["donat", "kahutu"] },
-  { id: 327, name: "Emmanuel Kalambay", partySize: 2, searchTerms: ["emmanuel", "kalambay"] },
-  { id: 328, name: "Paul Kalambay", partySize: 2, searchTerms: ["paul", "kalambay"] },
-  { id: 329, name: "Ceasar Mukuna", partySize: 2, searchTerms: ["ceasar", "mukuna"] },
-  { id: 330, name: "Mikyle Pillay", partySize: 2, searchTerms: ["mikyle", "pillay"] },
-  { id: 331, name: "Leonard Kadima", partySize: 2, searchTerms: ["leonard", "kadima"] },
-  { id: 332, name: "Jonathan Kayembe", partySize: 2, searchTerms: ["jonathan", "kayembe"] },
-  { id: 333, name: "Nevil Kajingu", partySize: 2, searchTerms: ["nevil", "kajingu"] },
-  { id: 334, name: "Pathy Mukie", partySize: 2, searchTerms: ["pathy", "mukie"] },
-  { id: 335, name: "Henoch N'daie", partySize: 2, searchTerms: ["henoch", "ndaie"] },
-  { id: 336, name: "Jean Kasemwana", partySize: 2, searchTerms: ["jean", "kasemwana"] },
-  { id: 337, name: "Guelord Yombi", partySize: 2, searchTerms: ["guelord", "yombi"] },
-  { id: 338, name: "Dannah Tshisul", partySize: 2, searchTerms: ["dannah", "tshisul"] },
-  { id: 339, name: "Joel Bajay", partySize: 2, searchTerms: ["joel", "bajay"] },
-  { id: 340, name: "Papi Senga", partySize: 2, searchTerms: ["papi", "senga"] },
-  { id: 341, name: "Mukaya", partySize: 2, searchTerms: ["mukaya"] },
-  { id: 342, name: "Jean Kapenga", partySize: 2, searchTerms: ["jean", "kapenga"] },
-  { id: 343, name: "Israel Kibambi", partySize: 2, searchTerms: ["israel", "kibambi"] },
-  { id: 344, name: "Docteur Bope", partySize: 2, searchTerms: ["docteur", "bope"] },
-  { id: 345, name: "Jean Paul Tshalanga", partySize: 2, searchTerms: ["jean", "paul", "tshalanga"] },
-  { id: 346, name: "Paul Ilunga", partySize: 2, searchTerms: ["paul", "ilunga"] },
-  { id: 347, name: "Mukepe", partySize: 2, searchTerms: ["mukepe"] },
-  { id: 348, name: "Pulayisa", partySize: 2, searchTerms: ["pulayisa"] },
-  { id: 349, name: "Mwepu", partySize: 2, searchTerms: ["mwepu"] },
-  { id: 350, name: "Mbuyu", partySize: 2, searchTerms: ["mbuyu"] },
-  { id: 351, name: "Mukendi", partySize: 2, searchTerms: ["mukendi"] },
+  { id: 300, name: "Couple Didiye Kangudia", partySize: 2, searchTerms: ["couple", "didiye", "kangudia"] },
+  { id: 301, name: "Couple Richard Mukeninay", partySize: 2, searchTerms: ["couple", "richard", "mukeninay"] },
+  { id: 302, name: "Couple Andri Kayembe", partySize: 2, searchTerms: ["couple", "andri", "kayembe"] },
+  { id: 303, name: "Couple Andre Kadima", partySize: 2, searchTerms: ["couple", "andre", "kadima"] },
+  { id: 304, name: "Couple Carl Tubadi", partySize: 2, searchTerms: ["couple", "carl", "tubadi"] },
+  { id: 305, name: "Couple Philipe Ngoma", partySize: 2, searchTerms: ["couple", "philipe", "ngoma"] },
+  { id: 306, name: "Couple Joshua Madi", partySize: 2, searchTerms: ["couple", "joshua", "madi"] },
+  { id: 307, name: "Couple Deli Kalonji", partySize: 2, searchTerms: ["couple", "deli", "kalonji"] },
+  { id: 308, name: "Couple Jaques Kanda", partySize: 2, searchTerms: ["couple", "jaques", "kanda"] },
+  { id: 309, name: "Couple Phinees Ngoie", partySize: 2, searchTerms: ["couple", "phinees", "ngoie"] },
+  { id: 310, name: "Couple Joel Mukuna", partySize: 2, searchTerms: ["couple", "joel", "mukuna"] },
+  { id: 311, name: "Couple Adonis Ngoie", partySize: 2, searchTerms: ["couple", "adonis", "ngoie"] },
+  { id: 312, name: "Couple Seraphin Ngoie", partySize: 2, searchTerms: ["couple", "seraphin", "ngoie"] },
+  { id: 313, name: "Couple Ekaka Kangudia", partySize: 2, searchTerms: ["couple", "ekaka", "kangudia"] },
+  { id: 314, name: "Couple Bruno Kalala", partySize: 2, searchTerms: ["couple", "bruno", "kalala"] },
+  { id: 315, name: "Couple Leonard Kayembe", partySize: 2, searchTerms: ["couple", "leonard", "kayembe"] },
+  { id: 316, name: "Couple Olivier Tumba", partySize: 2, searchTerms: ["couple", "olivier", "tumba"] },
+  { id: 317, name: "Couple Tatty Mulongoy", partySize: 2, searchTerms: ["couple", "tatty", "mulongoy"] },
+  { id: 318, name: "Couple Marc Tshibwabwa", partySize: 2, searchTerms: ["couple", "marc", "tshibwabwa"] },
+  { id: 319, name: "Couple Shadrac Ilunga", partySize: 2, searchTerms: ["couple", "shadrac", "ilunga"] },
+  { id: 320, name: "Couple Danny Kabemba", partySize: 2, searchTerms: ["couple", "danny", "kabemba"] },
+  { id: 321, name: "Couple Daniel Tshibangu", partySize: 2, searchTerms: ["couple", "daniel", "tshibangu"] },
+  { id: 322, name: "Couple Christophe Cesar", partySize: 2, searchTerms: ["couple", "christophe", "cesar"] },
+  { id: 323, name: "Couple Jean Lubanza", partySize: 2, searchTerms: ["couple", "jean", "lubanza"] },
+  { id: 324, name: "Couple Patrick Kalonji", partySize: 2, searchTerms: ["couple", "patrick", "kalonji"] },
+  { id: 325, name: "Couple Olivier Odia", partySize: 2, searchTerms: ["couple", "olivier", "odia"] },
+  { id: 326, name: "Couple Donat Kahutu", partySize: 2, searchTerms: ["couple", "donat", "kahutu"] },
+  { id: 327, name: "Couple Emmanuel Kalambay", partySize: 2, searchTerms: ["couple", "emmanuel", "kalambay"] },
+  { id: 328, name: "Couple Paul Kalambay", partySize: 2, searchTerms: ["couple", "paul", "kalambay"] },
+  { id: 329, name: "Couple Ceasar Mukuna", partySize: 2, searchTerms: ["couple", "ceasar", "mukuna"] },
+  { id: 330, name: "Couple Mikyle Pillay", partySize: 2, searchTerms: ["couple", "mikyle", "pillay"] },
+  { id: 331, name: "Couple Leonard Kadima", partySize: 2, searchTerms: ["couple", "leonard", "kadima"] },
+  { id: 332, name: "Couple Jonathan Kayembe", partySize: 2, searchTerms: ["couple", "jonathan", "kayembe"] },
+  { id: 333, name: "Couple Nevil Kajingu", partySize: 2, searchTerms: ["couple", "nevil", "kajingu"] },
+  { id: 334, name: "Couple Pathy Mukie", partySize: 2, searchTerms: ["couple", "pathy", "mukie"] },
+  { id: 335, name: "Couple Henoch N'daie", partySize: 2, searchTerms: ["couple", "henoch", "n'daie"] },
+  { id: 336, name: "Couple Jean Kasemwana", partySize: 2, searchTerms: ["couple", "jean", "kasemwana"] },
+  { id: 337, name: "Couple Guelord Yombi", partySize: 2, searchTerms: ["couple", "guelord", "yombi"] },
+  { id: 338, name: "Couple Dannah Tshisul", partySize: 2, searchTerms: ["couple", "dannah", "tshisul"] },
+  { id: 339, name: "Couple Joel Bajay", partySize: 2, searchTerms: ["couple", "joel", "bajay"] },
+  { id: 340, name: "Couple Papi Senga", partySize: 2, searchTerms: ["couple", "papi", "senga"] },
+  { id: 341, name: "Couple Mukaya", partySize: 2, searchTerms: ["couple", "mukaya"] },
+  { id: 342, name: "Couple Jean Kapenga", partySize: 2, searchTerms: ["couple", "jean", "kapenga"] },
+  { id: 343, name: "Couple Israel Kibambi", partySize: 2, searchTerms: ["couple", "israel", "kibambi"] },
+  { id: 344, name: "Couple Docteur Bope", partySize: 2, searchTerms: ["couple", "docteur", "bope"] },
+  { id: 345, name: "Couple Jean Paul Tshalanga", partySize: 2, searchTerms: ["couple", "jean", "paul", "tshalanga"] },
+  { id: 346, name: "Couple Paul Ilunga", partySize: 2, searchTerms: ["couple", "paul", "ilunga"] },
+  { id: 347, name: "Couple Mukepe", partySize: 2, searchTerms: ["couple", "mukepe"] },
+  { id: 348, name: "Couple Pulayisa", partySize: 2, searchTerms: ["couple", "pulayisa"] },
+  { id: 349, name: "Couple Mwepu", partySize: 2, searchTerms: ["couple", "mwepu"] },
+  { id: 350, name: "Couple Mbuyu", partySize: 2, searchTerms: ["couple", "mbuyu"] },
+  { id: 351, name: "Couple Mukendi", partySize: 2, searchTerms: ["couple", "mukendi"] },
 ];
 
-async function seedGuests() {
-  const guestsCollection = db.collection('guests');
-  let batch = db.batch();
-  let count = 0;
-
-  for (const guest of GUEST_LIST) {
-    const docRef = guestsCollection.doc(); // Automatically generate a new ID
-    batch.set(docRef, {
-      ...guest,
-      rsvp: 'pending',
-      code: generateUniqueCode(),
-      lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    count++;
-    if (count % 500 === 0) {
-      await batch.commit();
-      batch = db.batch();
+async function clearGuests() {
+  try {
+    const snapshot = await db.collection('guests').get();
+    if (!snapshot.empty) {
+      let batch = db.batch();
+      let count = 0;
+      snapshot.forEach(doc => {
+        batch.delete(doc.ref);
+        count++;
+        if (count % 500 === 0) {
+          batch.commit();
+          batch = db.batch();
+        }
+      });
+      if (count % 500 !== 0) {
+        await batch.commit();
+      }
+      console.log(`Cleared ${count} existing guests.`);
     }
+  } catch (error) {
+    console.error('Error clearing guests:', error);
+    throw error;
   }
+}
 
-  if (count % 500 !== 0) {
-    await batch.commit();
+async function seedGuests() {
+  try {
+    console.log('Clearing existing guest list...');
+    await clearGuests();
+
+    const guestsCollection = db.collection('guests');
+    let batch = db.batch();
+    let count = 0;
+
+    for (const guest of GUEST_LIST) {
+      const docRef = guestsCollection.doc(); // Automatically generate a new ID
+      batch.set(docRef, {
+        ...guest,
+        rsvp: 'pending',
+        code: generateUniqueCode(),
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      count++;
+      if (count % 500 === 0) {
+        await batch.commit();
+        batch = db.batch();
+      }
+    }
+
+    if (count % 500 !== 0) {
+      await batch.commit();
+    }
+
+    console.log(`Seeded ${count} guests.`);
+  } catch (error) {
+    console.error('Error seeding guests:', error);
+    throw error;
   }
-
-  console.log(`Seeded ${count} guests.`);
 }
 
 function generateUniqueCode() {

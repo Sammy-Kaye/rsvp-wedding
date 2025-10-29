@@ -22,7 +22,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            if (confirm('Are you sure you want to seed the database with the guest list? This will add all guests from the GUEST_LIST array in seed.js.')) {
+            if (confirm('Are you sure you want to seed the database with the guest list? This will OVERWRITE all existing guests in Firebase with the new 127 guests from the GUEST_LIST array in seed.js.')) {
                 seedGuests().then(() => {
                     alert('Successfully seeded the guest list!');
                 }).catch(error => {

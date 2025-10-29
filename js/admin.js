@@ -174,15 +174,17 @@ function updateGuestList(guests) {
 
 // Update statistics
 function updateStats(guests) {
-    const total = guests.length;
-    const attending = guests.filter(g => g.rsvp === 'attending').length;
-    const notAttending = guests.filter(g => g.rsvp === 'not_attending').length;
-    const pending = guests.filter(g => g.rsvp === 'pending').length;
-    
-    totalGuestsEl.textContent = total;
-    attendingCountEl.textContent = attending;
-    notAttendingCountEl.textContent = notAttending;
-    pendingCountEl.textContent = pending;
+    const couples = guests.filter(g => g.partySize === 2).length;
+    const singles = guests.filter(g => g.partySize === 1).length;
+    const totalPeople = guests.reduce((sum, g) => sum + g.partySize, 0);
+    const attendingPeople = guests.filter(g => g.rsvp === 'attending').reduce((sum, g) => sum + g.partySize, 0);
+    const notAttendingPeople = guests.filter(g => g.rsvp === 'not_attending').reduce((sum, g) => sum + g.partySize, 0);
+    const pendingPeople = guests.filter(g => g.rsvp === 'pending').reduce((sum, g) => sum + g.partySize, 0);
+
+    totalGuestsEl.textContent = `${totalPeople} Total (${couples} Couples, ${singles} Singles)`;
+    attendingCountEl.textContent = attendingPeople;
+    notAttendingCountEl.textContent = notAttendingPeople;
+    pendingCountEl.textContent = pendingPeople;
 }
 
 // Reset a guest's RSVP

@@ -268,29 +268,62 @@ function generateUniqueCode(guestId) {
 
 // Download invitation PDF
 if (downloadInviteBtn) {
-    downloadInviteBtn.addEventListener('click', () => {
+    downloadInviteBtn.addEventListener('click', async () => {
         if (!currentGuest) return;
-        
-        // In a real app, this would generate and download a PDF
-        // For now, we'll show a message
-        alert('In a real implementation, this would download a PDF invitation.');
-        
-        // Example of what the PDF would contain:
-        /*
-        Wedding Invitation
-        -----------------
-        Guest: ${currentGuest.name}
-        Code: ${generateUniqueCode(currentGuest.id)}
-        
-        You're invited to celebrate the marriage of
-        John & Jane
-        
-        Date: June 12, 2025
-        Time: 4:00 PM
-        Location: The Grand Ballroom, New York
-        
-        Please present this invitation at the entrance.
-        */
+
+        try {
+            // Create PDF document
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add title
+            doc.setFontSize(24);
+            doc.text('Wedding Invitation', 105, 20, { align: 'center' });
+
+            // Add couple names
+            doc.setFontSize(18);
+            doc.text('John & Jane', 105, 35, { align: 'center' });
+
+            // Guest name and code
+            doc.setFontSize(14);
+            doc.text(`Guest: ${currentGuest.name}`, 20, 60);
+            doc.text(`RSVP Code: ${currentGuest.code}`, 20, 75);
+
+            // Wedding details
+            doc.text('We cordially invite you to celebrate our marriage', 20, 95);
+
+            doc.setFontSize(16);
+            doc.text('Ceremony & Reception', 105, 115, { align: 'center' });
+
+            doc.setFontSize(14);
+            doc.text('Saturday, June 12, 2025', 105, 135, { align: 'center' });
+            doc.text('4:00 PM Ceremony', 105, 150, { align: 'center' });
+            doc.text('The Grand Ballroom', 105, 165, { align: 'center' });
+            doc.text('123 Wedding Lane', 105, 180, { align: 'center' });
+            doc.text('New York, NY 10001', 105, 195, { align: 'center' });
+
+            // Generate QR code
+            const qrCodeDataURL = await QRCode.toDataURL(currentGuest.code, { width: 150, height: 150 });
+
+            // Add QR code to PDF
+            doc.addImage(qrCodeDataURL, 'PNG', 170, 60, 30, 30);
+
+            doc.setFontSize(10);
+            doc.text('Scan QR code or present this invitation', 170, 95, { align: 'center' });
+
+            // Additional instructions
+            doc.setFontSize(12);
+            doc.text('Please bring this invitation to the venue.', 20, 220);
+            doc.text('This document serves as proof of RSVP.', 20, 235);
+
+            // Save the PDF
+            const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.pdf`;
+            doc.save(fileName);
+
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Failed to generate PDF invitation. Please try again or contact the couple.');
+        }
     });
 }
 
