@@ -276,8 +276,8 @@ if (downloadInviteBtn) {
 
         try {
             // Populate the hidden invitation content div
-            const pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
-            const pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
+            const pdfGuestNameElement = document.getElementById('pdfGuestName');
+            const pdfRsvpCodeElement = document.getElementById('pdfRsvpCode');
 
             console.log('pdfGuestNameElement:', pdfGuestNameElement);
             console.log('pdfRsvpCodeElement:', pdfRsvpCodeElement);
