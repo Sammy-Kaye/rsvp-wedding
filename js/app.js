@@ -258,7 +258,13 @@ function generateUniqueCode() {
 // Download invitation (now opens modal)
 if (downloadInviteBtn) {
     downloadInviteBtn.addEventListener('click', async () => {
-        if (!currentGuest) return;
+        console.log('Download invite button clicked');
+        console.log('Current guest:', currentGuest);
+        if (!currentGuest) {
+            console.error('No guest selected');
+            alert('Please select a guest first');
+            return;
+        }
 
         const invitationContent = document.getElementById('invitationContent');
         const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.png`;
@@ -271,7 +277,14 @@ if (downloadInviteBtn) {
 
             if (!pdfGuestName || !pdfRsvpCode || !qrcodeContainer || !currentGuest.name || !currentGuest.code) {
                 console.error('Required elements or guest data missing for invitation generation');
-                alert('Failed to generate invitation. Required data is missing.');
+                console.log('Elements check:', {
+                    pdfGuestName: !!pdfGuestName,
+                    pdfRsvpCode: !!pdfRsvpCode,
+                    qrcodeContainer: !!qrcodeContainer,
+                    guestName: !!currentGuest?.name,
+                    guestCode: !!currentGuest?.code
+                });
+                alert('Failed to generate invitation. Please make sure you have selected a guest and all required information is available.');
                 return;
             }
 
