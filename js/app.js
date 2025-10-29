@@ -11,6 +11,11 @@ const rsvpOptions = document.querySelectorAll('.rsvp-option');
 const downloadInviteBtn = document.getElementById('downloadInvite');
 const scrollDown = document.querySelector('.scroll-down');
 
+const invitationModal = document.getElementById('invitationModal');
+const closeButton = document.querySelector('#invitationModal .close-button');
+const viewInvitationBtn = document.getElementById('viewInvitationBtn');
+const downloadInvitationBtn = document.getElementById('downloadInvitationBtn');
+
 
 
 // Track current guest
@@ -204,7 +209,7 @@ async function submitRSVP(response) {
     
     try {
         // Generate a unique code if it doesn't exist
-        const uniqueCode = currentGuest.code || generateUniqueCode(currentGuest.id);
+        const uniqueCode = currentGuest.code || generateUniqueCode();
         
         // Update guest in Firestore
         await db.collection('guests').doc(currentGuest.id).update({
@@ -261,67 +266,53 @@ function generateUniqueCode() {
     return result;
 }
 
-// Download invitation PDF
+// Download invitation (now opens modal)
 if (downloadInviteBtn) {
     downloadInviteBtn.addEventListener('click', async () => {
         if (!currentGuest) return;
 
+        const invitationContent = document.getElementById('invitationContent');
+        const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.png`;
+
         try {
-            // Create PDF document using jsPDF from global scope
-            if (typeof jsPDF === 'undefined') {
-                console.error('jsPDF library is not loaded.');
-                alert('Failed to generate PDF invitation. PDF library is missing.');
-                return;
-            }
+            // Populate the hidden invitation content div
+            document.getElementById('pdfGuestName').textContent = currentGuest.name;
+            document.getElementById('pdfRsvpCode').textContent = currentGuest.code;
 
-            const doc = new jsPDF();
+            // Generate QR code
+            const qrcodeContainer = document.getElementById('qrcodeContainer');
+            qrcodeContainer.innerHTML = ''; // Clear previous QR code
+            new QRCode(qrcodeContainer, {
+                text: currentGuest.code,
+                width: 128,
+                height: 128,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
 
-            // Add title
-            doc.setFontSize(24);
-            doc.text('Wedding Invitation', 105, 20, { align: 'center' });
+            // Temporarily show the invitation content for image generation
+            invitationContent.style.display = 'block';
+                        
+            // Wait for QR code to render and content to be fully visible
+            await new Promise(resolve => setTimeout(resolve, 1000)); 
+                        
+            html2canvas(invitationContent).then(canvas => {
+                const imageDataURL = canvas.toDataURL('image/png');
+                
+                // Store the image data URL and file name globally or pass to modal handlers
+                window.generatedInvitationImage = imageDataURL;
+                window.generatedInvitationFileName = fileName;
 
-            // Add couple names
-            doc.setFontSize(18);
-            doc.text('John & Jane', 105, 35, { align: 'center' });
+                // Hide the invitation content again after image generation
+                invitationContent.style.display = 'none';
 
-            // Guest name and code
-            doc.setFontSize(14);
-            doc.text(`Guest: ${currentGuest.name}`, 20, 60);
-            doc.text(`RSVP Code: ${currentGuest.code}`, 20, 75);
-
-            // Wedding details
-            doc.setFontSize(12);
-            doc.text('We cordially invite you to celebrate our marriage', 20, 95);
-
-            doc.setFontSize(16);
-            doc.text('Ceremony & Reception', 105, 115, { align: 'center' });
-
-            doc.setFontSize(14);
-            doc.text('Saturday, June 12, 2025', 105, 135, { align: 'center' });
-            doc.text('4:00 PM Ceremony', 105, 150, { align: 'center' });
-            doc.text('The Grand Ballroom', 105, 165, { align: 'center' });
-            doc.text('123 Wedding Lane', 105, 180, { align: 'center' });
-            doc.text('New York, NY 10001', 105, 195, { align: 'center' });
-
-            // For now, create a simple QR code representation with text
-            doc.setFontSize(12);
-            doc.text('RSVP Code for Entry:', 20, 220);
-            doc.setFontSize(18);
-            doc.setFont('helvetica', 'bold');
-            doc.text(currentGuest.code, 20, 235);
-
-            // Additional instructions
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'normal');
-            doc.text('Present your RSVP code at the venue entrance.', 20, 255);
-
-            // Save the PDF
-            const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.pdf`;
-            doc.save(fileName);
-
+                // Open the modal
+                invitationModal.style.display = 'flex'; // Use flex to center
+            });
         } catch (error) {
-            console.error('Error generating PDF:', error);
-            alert('Failed to generate PDF invitation. Please try again or contact the couple.');
+            console.error('Error generating image:', error);
+            alert('Failed to generate image invitation. Please try again or contact the couple.');
         }
     });
 }
@@ -411,4 +402,48 @@ async function submitRsvp(data) {
   const id = data.name.toLowerCase().replace(/\s+/g,'-');  // simple key
   await db.collection('rsvps').doc(id).set(data);
   return id;
+}
+
+// Modal close button
+if (closeButton) {
+    closeButton.addEventListener('click', () => {
+        invitationModal.style.display = 'none';
+    });
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', (event) => {
+    if (event.target === invitationModal) {
+        invitationModal.style.display = 'none';
+    }
+});
+
+// View Invitation button
+if (viewInvitationBtn) {
+    viewInvitationBtn.addEventListener('click', () => {
+        if (window.generatedInvitationImage) {
+            const newTab = window.open();
+            newTab.document.body.innerHTML = `<img src="${window.generatedInvitationImage}" style="max-width: 100%; height: auto;">`;
+            invitationModal.style.display = 'none';
+        } else {
+            alert('No invitation image generated. Please try again.');
+        }
+    });
+}
+
+// Download Invitation button
+if (downloadInvitationBtn) {
+    downloadInvitationBtn.addEventListener('click', () => {
+        if (window.generatedInvitationImage && window.generatedInvitationFileName) {
+            const a = document.createElement('a');
+            a.href = window.generatedInvitationImage;
+            a.download = window.generatedInvitationFileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            invitationModal.style.display = 'none';
+        } else {
+            alert('No invitation image generated. Please try again.');
+        }
+    });
 }

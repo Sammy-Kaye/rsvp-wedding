@@ -137,9 +137,43 @@
                             <h3>Thank you for your RSVP!</h3>
                             <p>Your response has been recorded. We can't wait to celebrate with you!</p>
                             <button id="downloadInvite" class="cta-button">
-                                <i class="fas fa-download"></i> Download Your Invitation
+                                <i class="fas fa-download"></i> View/Download Invitation
                             </button>
                         </div>
+                    </div>
+
+                    <!-- Invitation Modal -->
+                    <div id="invitationModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close-button">&times;</span>
+                            <h2>Your Wedding Invitation</h2>
+                            <p>You can view your invitation in a new tab or download it directly.</p>
+                            <div class="modal-actions">
+                                <button id="viewInvitationBtn" class="cta-button">View Invitation</button>
+                                <button id="downloadInvitationBtn" class="cta-button">Download Invitation</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden Invitation Content for Image Generation -->
+                    <div id="invitationContent" style="display: none; padding: 20px; font-family: 'Montserrat', sans-serif; color: #333;">
+                        <h1 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;">Wedding Invitation</h1>
+                        <h2 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;">John & Jane</h2>
+                        <p style="text-align: center; font-size: 1.1em;">We cordially invite you to celebrate our marriage</p>
+                        <p style="text-align: center; font-size: 1.2em; font-weight: bold;">Guest: <span id="pdfGuestName"></span></p>
+                        <p style="text-align: center; font-size: 1.2em; font-weight: bold;">RSVP Code: <span id="pdfRsvpCode"></span></p>
+                        
+                        <h3 style="text-align: center; color: #8B4513;">Ceremony & Reception</h3>
+                        <p style="text-align: center;">Saturday, June 12, 2025</p>
+                        <p style="text-align: center;">4:00 PM Ceremony</p>
+                        <p style="text-align: center;">The Grand Ballroom</p>
+                        <p style="text-align: center;">123 Wedding Lane</p>
+                        <p style="text-align: center;">New York, NY 10001</p>
+                        
+                        <div id="qrcodeContainer" style="text-align: center; margin-top: 20px;"></div>
+                        
+                        <p style="text-align: center; font-size: 0.9em; margin-top: 20px;">Please bring this invitation to the venue.</p>
+                        <p style="text-align: center; font-size: 0.9em;">This document serves as proof of RSVP.</p>
                     </div>
                 </div>
             </div>
@@ -158,8 +192,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <!-- Firestore -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-    <!-- PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Image generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- QR Code generation -->
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <!-- Your init (creates global variable db) -->
