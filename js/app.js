@@ -11,8 +11,7 @@ const rsvpOptions = document.querySelectorAll('.rsvp-option');
 const downloadInviteBtn = document.getElementById('downloadInvite');
 const scrollDown = document.querySelector('.scroll-down');
 
-// Firestore settings
-db.settings({ timestampsInSnapshots: true });
+
 
 // Track current guest
 let currentGuest = null;
@@ -46,8 +45,7 @@ async function handleGuestSearch(e) {
     try {
         const guestsRef = db.collection('guests');
         const snapshot = await guestsRef
-            .where('name', '>=', searchTerm)
-            .where('name', '<=', searchTerm + '\uf8ff')
+            .where('searchTerms', 'array-contains', searchTerm)
             .limit(10)
             .get();
             

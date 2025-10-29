@@ -15,6 +15,7 @@ if (!firebase.apps.length) {
   
   // Initialize Firestore with settings
   const db = firebase.firestore();
+  db.settings({ timestampsInSnapshots: true });
   
   // Make db available globally
   window.db = db;
