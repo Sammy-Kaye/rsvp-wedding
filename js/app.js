@@ -276,25 +276,17 @@ if (downloadInviteBtn) {
 
         try {
             // Populate the hidden invitation content div
-            const pdfGuestName = document.getElementById('pdfGuestName');
-            const pdfRsvpCode = document.getElementById('pdfRsvpCode');
-            const qrcodeContainer = document.getElementById('qrcodeContainer');
+            const pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
+            const pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
 
-            if (!pdfGuestName || !pdfRsvpCode || !qrcodeContainer || !currentGuest.name || !currentGuest.code) {
-                console.error('Required elements or guest data missing for invitation generation');
-                console.log('Elements check:', {
-                    pdfGuestName: !!pdfGuestName,
-                    pdfRsvpCode: !!pdfRsvpCode,
-                    qrcodeContainer: !!qrcodeContainer,
-                    guestName: !!currentGuest?.name,
-                    guestCode: !!currentGuest?.code
-                });
-                alert('Failed to generate invitation. Please make sure you have selected a guest and all required information is available.');
+            if (!pdfGuestNameElement || !pdfRsvpCodeElement) {
+                console.error('Missing required elements inside invitationContent.');
+                alert('Required elements for invitation generation are missing. Please contact the couple.');
                 return;
             }
 
-            pdfGuestName.textContent = currentGuest.name;
-            pdfRsvpCode.textContent = currentGuest.code;
+            pdfGuestNameElement.textContent = currentGuest.name;
+            pdfRsvpCodeElement.textContent = currentGuest.code;
 
             // Generate QR code
             qrcodeContainer.innerHTML = ''; // Clear previous QR code
