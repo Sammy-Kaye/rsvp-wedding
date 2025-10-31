@@ -17,6 +17,107 @@ const rsvpOptions = document.querySelectorAll('.rsvp-option');
 let currentGuest = null;
 let allGuests = [];
 
+// Notification System (defined early so it can be used throughout)
+function showNotification(message, type = 'info', duration = 5000) {
+    const container = document.getElementById('notificationContainer');
+    if (!container) {
+        // Fallback to alert if container doesn't exist
+        alert(message);
+        return;
+    }
+
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        background: ${type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : type === 'warning' ? '#ffc107' : '#007bff'};
+        color: white;
+        padding: 16px 20px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideIn 0.3s ease-out;
+        font-size: 14px;
+        line-height: 1.5;
+    `;
+
+    const messageText = document.createElement('div');
+    messageText.textContent = message;
+    messageText.style.flex = '1';
+    notification.appendChild(messageText);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.style.cssText = `
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 15px;
+        width: 24px;
+        height: 24px;
+        line-height: 1;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    `;
+    closeBtn.onmouseover = () => closeBtn.style.opacity = '1';
+    closeBtn.onmouseout = () => closeBtn.style.opacity = '0.8';
+    closeBtn.onclick = () => removeNotification(notification);
+    notification.appendChild(closeBtn);
+
+    container.appendChild(notification);
+
+    // Auto remove after duration
+    if (duration > 0) {
+        setTimeout(() => {
+            removeNotification(notification);
+        }, duration);
+    }
+}
+
+function removeNotification(notification) {
+    if (notification && notification.parentNode) {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }
+}
+
+// Add CSS animations if not already in stylesheet
+if (!document.getElementById('notificationStyles')) {
+    const style = document.createElement('style');
+    style.id = 'notificationStyles';
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // Load all guests from Firestore on page load
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded, initializing...');
@@ -85,6 +186,11 @@ function debounce(func, wait) {
 
 // Handle guest search
 function handleGuestSearch(e) {
+    if (!e || !e.target || !searchResults) {
+        console.error('Search function called with invalid parameters or searchResults element missing');
+        return;
+    }
+    
     const searchTerm = e.target.value.trim().toLowerCase();
     
     if (searchTerm.length < 1) {
@@ -93,10 +199,32 @@ function handleGuestSearch(e) {
         return;
     }
     
+    if (!allGuests || allGuests.length === 0) {
+        console.warn('No guests loaded yet');
+        return;
+    }
+    
     const matches = allGuests.filter(guest => {
+        if (!guest || !guest.name) return false;
+        
         const name = guest.name.toLowerCase();
-        const searchTerms = guest.searchTerms.join(' ').toLowerCase();
-        return name.includes(searchTerm) || searchTerms.includes(searchTerm);
+        
+        // Handle searchTerms - check if it exists and is an array
+        let searchTermsText = '';
+        if (guest.searchTerms && Array.isArray(guest.searchTerms)) {
+            searchTermsText = guest.searchTerms.join(' ').toLowerCase();
+        } else if (guest.searchTerms) {
+            // If it's a string, use it directly
+            searchTermsText = String(guest.searchTerms).toLowerCase();
+        }
+        
+        // Also search in email if it exists
+        const email = guest.email ? guest.email.toLowerCase() : '';
+        
+        // Match anywhere in the string (case-insensitive)
+        return name.includes(searchTerm) || 
+               searchTermsText.includes(searchTerm) || 
+               email.includes(searchTerm);
     }).slice(0, 10);
     
     displaySearchResults(matches);
@@ -293,14 +421,14 @@ async function generateAndDownloadInvitation() {
     
     if (!currentGuest || !currentGuest.name || !currentGuest.code) {
         console.error('No guest selected or guest data incomplete');
-        alert('Please select a guest first');
+        showNotification('Please select a guest first', 'warning', 4000);
         return;
     }
 
     const invitationContent = document.getElementById('invitationContent');
     if (!invitationContent) {
         console.error('invitationContent element not found in DOM');
-        alert('Error: Could not load invitation. Please refresh the page and try again.');
+        showNotification('Error: Could not load invitation. Please refresh the page and try again.', 'error', 6000);
         return;
     }
 
@@ -435,15 +563,14 @@ async function generateAndDownloadInvitation() {
 
     } catch (error) {
         console.error('Error generating image:', error);
-        alert('Failed to generate image invitation. Please try again or contact the couple.');
+        showNotification('Failed to generate image invitation. Please try again or contact the couple.', 'error', 6000);
         invitationContent.style.display = 'none';
     }
 }
 
-// Show a message to the user
+// Show a message to the user (updated to use notifications)
 function showMessage(title, message) {
-    // In a real app, you might use a modal or toast notification
-    alert(`${title}\n\n${message}`);
+    showNotification(`${title}: ${message}`, 'info', 6000);
 }
 
 

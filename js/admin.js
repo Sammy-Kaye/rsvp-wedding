@@ -8,6 +8,105 @@ const exportBtn = document.getElementById('exportBtn');
 const searchInput = document.getElementById('searchGuest');
 const guestsTableBody = document.getElementById('guestsTableBody');
 
+// Notification System (defined early so it can be used throughout)
+function showNotification(message, type = 'info', duration = 5000) {
+    const container = document.getElementById('notificationContainer');
+    if (!container) {
+        alert(message);
+        return;
+    }
+
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        background: ${type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : type === 'warning' ? '#ffc107' : '#007bff'};
+        color: white;
+        padding: 16px 20px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideIn 0.3s ease-out;
+        font-size: 14px;
+        line-height: 1.5;
+    `;
+
+    const messageText = document.createElement('div');
+    messageText.textContent = message;
+    messageText.style.flex = '1';
+    notification.appendChild(messageText);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.style.cssText = `
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 15px;
+        width: 24px;
+        height: 24px;
+        line-height: 1;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    `;
+    closeBtn.onmouseover = () => closeBtn.style.opacity = '1';
+    closeBtn.onmouseout = () => closeBtn.style.opacity = '0.8';
+    closeBtn.onclick = () => removeNotification(notification);
+    notification.appendChild(closeBtn);
+
+    container.appendChild(notification);
+
+    if (duration > 0) {
+        setTimeout(() => {
+            removeNotification(notification);
+        }, duration);
+    }
+}
+
+function removeNotification(notification) {
+    if (notification && notification.parentNode) {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }
+}
+
+// Add CSS animations if not already in stylesheet
+if (!document.getElementById('notificationStyles')) {
+    const style = document.createElement('style');
+    style.id = 'notificationStyles';
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // Add Guest Modal Elements
 const addGuestBtn = document.getElementById('addGuestBtn');
 const addGuestModal = document.getElementById('addGuestModal');
@@ -110,7 +209,7 @@ if (logoutBtn) {
                 }
             } catch (error) {
                 console.error('Logout error:', error);
-                alert('Failed to log out. Please try again.');
+                showNotification('Failed to log out. Please try again.', 'error', 4000);
             }
         }
     });
@@ -181,7 +280,7 @@ async function loadGuestData() {
         updateStats(guests);
     } catch (error) {
         console.error('Error loading guest data:', error);
-        alert('Failed to load guest data. Please try again.');
+        showNotification('Failed to load guest data. Please try again.', 'error', 5000);
     }
 }
 
@@ -284,10 +383,10 @@ async function resetGuestRSVP(guestId) {
         
         // Reload the guest data
         loadGuestData();
-        alert('RSVP has been reset. The guest can now RSVP again.');
+        showNotification('RSVP has been reset. The guest can now RSVP again.', 'success', 5000);
     } catch (error) {
         console.error('Error resetting RSVP:', error);
-        alert('Failed to reset RSVP. Please try again.');
+        showNotification('Failed to reset RSVP. Please try again.', 'error', 5000);
     }
 }
 
@@ -296,7 +395,7 @@ async function viewGuestDetails(guestId) {
     try {
         const doc = await db.collection('guests').doc(guestId).get();
         if (!doc.exists) {
-            alert('Guest not found.');
+            showNotification('Guest not found.', 'error', 4000);
             return;
         }
         
@@ -304,18 +403,19 @@ async function viewGuestDetails(guestId) {
         const lastUpdated = guest.lastUpdated?.toDate() || 'N/A';
         
         const details = `
-            <strong>Name:</strong> ${guest.name}\n
-            <strong>Email:</strong> ${guest.email || 'N/A'}\n
-            <strong>Status:</strong> ${guest.rsvp || 'Pending'}\n
-            <strong>RSVP Code:</strong> ${guest.code || 'N/A'}\n
-            <strong>Last Updated:</strong> ${lastUpdated}\n
-            <strong>Additional Notes:</strong> ${guest.notes || 'None'}
+Name: ${guest.name}
+Email: ${guest.email || 'N/A'}
+Status: ${guest.rsvp || 'Pending'}
+RSVP Code: ${guest.code || 'N/A'}
+Last Updated: ${lastUpdated}
+Additional Notes: ${guest.notes || 'None'}
         `;
         
-        alert(details);
+        // Show details in a modal-like notification (longer duration)
+        showNotification(details, 'info', 10000);
     } catch (error) {
         console.error('Error viewing guest details:', error);
-        alert('Failed to load guest details. Please try again.');
+        showNotification('Failed to load guest details. Please try again.', 'error', 5000);
     }
 }
 
@@ -378,7 +478,7 @@ async function exportToCSV() {
         
     } catch (error) {
         console.error('Error exporting to CSV:', error);
-        alert('Failed to export data. Please try again.');
+        showNotification('Failed to export data. Please try again.', 'error', 5000);
     }
 }
 
@@ -397,7 +497,7 @@ function debounce(func, wait) {
 
 // Show a message to the user
 function showMessage(title, message) {
-    alert(`${title}\n\n${message}`);
+    showNotification(`${title}: ${message}`, 'info', 6000);
 }
 
 // Add Guest Modal Functions
@@ -442,7 +542,7 @@ async function handleAddGuest(e) {
     const notes = guestNotesInput.value.trim();
 
     if (!name) {
-        alert('Please enter a guest name.');
+        showNotification('Please enter a guest name.', 'warning', 4000);
         guestNameInput.focus();
         return;
     }
@@ -454,7 +554,7 @@ async function handleAddGuest(e) {
             .get();
 
         if (!existingGuest.empty) {
-            alert('A guest with this name already exists.');
+            showNotification('A guest with this name already exists.', 'warning', 4000);
             guestNameInput.focus();
             return;
         }
@@ -472,13 +572,13 @@ async function handleAddGuest(e) {
 
         await db.collection('guests').add(guestData);
 
-        alert('Guest added successfully!');
+        showNotification('Guest added successfully!', 'success', 4000);
         closeAddGuestModal();
         loadGuestData(); // Refresh the table
 
     } catch (error) {
         console.error('Error adding guest:', error);
-        alert('Failed to add guest. Please try again.');
+        showNotification('Failed to add guest. Please try again.', 'error', 5000);
     }
 }
 
