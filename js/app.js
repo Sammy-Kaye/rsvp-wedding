@@ -3,6 +3,7 @@ const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const navLinks = document.querySelector('.nav-links');
 const nav = document.querySelector('nav');
 const guestSearch = document.getElementById('guestSearch');
+const searchResults = document.getElementById('searchResults');
 
 const rsvpForm = document.getElementById('rsvpForm');
 const rsvpSuccess = document.getElementById('rsvpSuccess');
@@ -310,21 +311,6 @@ async function generateAndDownloadInvitation() {
     const qrcodeContainer = document.getElementById('qrcodeContainer');
 
     try {
-        const pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
-        const pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
-
-        if (!pdfGuestNameElement || !pdfRsvpCodeElement || !qrcodeContainer) {
-            const missingElements = [
-                !pdfGuestNameElement ? 'Guest Name' : null,
-                !pdfRsvpCodeElement ? 'RSVP Code' : null,
-                !qrcodeContainer ? 'QR Code Container' : null
-            ].filter(Boolean);
-            
-            console.error('Missing required elements:', missingElements);
-            alert(`Error: Could not generate invitation. Missing: ${missingElements.join(', ')}`);
-            return;
-        }
-
         pdfGuestNameElement.textContent = currentGuest.name;
         pdfRsvpCodeElement.textContent = currentGuest.code;
 
@@ -339,6 +325,17 @@ async function generateAndDownloadInvitation() {
         });
 
         await new Promise(resolve => setTimeout(resolve, 1000)); 
+
+        const pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
+        const pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
+
+        if (!pdfGuestNameElement || !pdfRsvpCodeElement) {
+            console.error('Could not find guest name or rsvp code element');
+            return;
+        }
+
+        pdfGuestNameElement.textContent = currentGuest.name;
+        pdfRsvpCodeElement.textContent = currentGuest.code;
                 
         const canvas = await html2canvas(invitationContent);
         const imageDataURL = canvas.toDataURL('image/png');
@@ -365,15 +362,7 @@ function showMessage(title, message) {
     alert(`${title}\n\n${message}`);
 }
 
-// Scroll down button
-if (scrollDown) {
-    scrollDown.addEventListener('click', () => {
-        window.scrollTo({
-            top: window.innerHeight,
-            behavior: 'smooth'
-        });
-    });
-}
+
 
 // Add animation on scroll
 function animateOnScroll() {
