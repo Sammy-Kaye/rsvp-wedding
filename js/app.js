@@ -311,9 +311,6 @@ async function generateAndDownloadInvitation() {
     const qrcodeContainer = document.getElementById('qrcodeContainer');
 
     try {
-        pdfGuestNameElement.textContent = currentGuest.name;
-        pdfRsvpCodeElement.textContent = currentGuest.code;
-
         qrcodeContainer.innerHTML = '';
         new QRCode(qrcodeContainer, {
             text: currentGuest.code,
