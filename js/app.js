@@ -327,15 +327,10 @@ async function generateAndDownloadInvitation() {
             pdfGuestNameElement = nameP.querySelector('#pdfGuestName');
         }
 
-        if (!pdfRsvpCodeElement) {
-            const codeP = document.createElement('p');
-            codeP.style.textAlign = 'center';
-            codeP.style.fontSize = '1.2em';
-            codeP.style.fontWeight = 'bold';
-            codeP.setAttribute('data-translate', 'invitation_rsvp_code');
-            codeP.innerHTML = 'RSVP Code: <span id="pdfRsvpCode"></span>';
-            invitationContent.appendChild(codeP);
-            pdfRsvpCodeElement = codeP.querySelector('#pdfRsvpCode');
+        // RSVP Code is no longer displayed as text since it's in the QR code
+        // But we keep the element query in case it exists in older templates
+        if (pdfRsvpCodeElement) {
+            pdfRsvpCodeElement.textContent = currentGuest.code;
         }
 
         if (!qrcodeContainer) {
@@ -369,15 +364,19 @@ async function generateAndDownloadInvitation() {
         
         // Re-query (in case of DOM changes) and validate
         pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
-        pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
         
-        if (!pdfGuestNameElement || !pdfRsvpCodeElement) {
-            console.error('Could not find guest name or rsvp code element');
+        if (!pdfGuestNameElement) {
+            console.error('Could not find guest name element');
             return;
         }
 
         pdfGuestNameElement.textContent = currentGuest.name;
-        pdfRsvpCodeElement.textContent = currentGuest.code;
+        
+        // Update RSVP code element if it exists (for backward compatibility)
+        pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
+        if (pdfRsvpCodeElement) {
+            pdfRsvpCodeElement.textContent = currentGuest.code;
+        }
         
         // Ensure date and address are in correct format
         const dateElement = invitationContent.querySelector('[data-translate="invitation_date"]');

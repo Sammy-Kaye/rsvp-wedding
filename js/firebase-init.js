@@ -13,12 +13,16 @@ if (!firebase.apps.length) {
   // Initialize Firebase
   const app = firebase.initializeApp(firebaseConfig);
   
+  // Initialize Authentication
+  const auth = firebase.auth();
+  
   // Initialize Firestore with settings
   const db = firebase.firestore();
   db.settings({ timestampsInSnapshots: true });
   
-  // Make db available globally
+  // Make db and auth available globally
   window.db = db;
+  window.auth = auth;
   
   // Only set up persistence if in browser environment
   if (typeof window !== 'undefined') {
@@ -33,8 +37,9 @@ if (!firebase.apps.length) {
       });
   }
 } else {
-  // If Firebase is already initialized, just get the existing db instance
+  // If Firebase is already initialized, just get the existing instances
   window.db = firebase.firestore();
+  window.auth = firebase.auth();
 }
 
 // Firestore helpers

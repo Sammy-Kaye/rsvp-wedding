@@ -24,37 +24,94 @@ const attendingCountEl = document.getElementById('attendingCount');
 const notAttendingCountEl = document.getElementById('notAttendingCount');
 const pendingCountEl = document.getElementById('pendingCount');
 
-// Admin credentials (in a real app, use Firebase Authentication)
-const ADMIN_PASSWORD = 'wedding2025'; // Change this to a secure password
-
 // Check authentication status on page load
 document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('adminLoggedIn') === 'true') {
-        showDashboard();
+    // Listen for auth state changes
+    if (window.auth) {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
+                showDashboard();
+            } else {
+                // User is signed out
+                showLogin();
+            }
+        });
+    } else {
+        console.error('Firebase Auth not initialized. Make sure firebase-init.js loads before admin.js');
     }
 });
 
 // Login button click
 if (loginBtn) {
-    loginBtn.addEventListener('click', () => {
+    loginBtn.addEventListener('click', async () => {
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value.trim();
 
-        if (password === ADMIN_PASSWORD) {
-            localStorage.setItem('adminLoggedIn', 'true');
-            showDashboard();
-        } else {
-            loginError.style.display = 'block';
-            document.getElementById('password').focus();
+        if (!email || !password) {
+            showLoginError('Please enter both email and password.');
+            return;
+        }
+
+        if (!window.auth) {
+            showLoginError('Authentication service not available. Please refresh the page.');
+            return;
+        }
+
+        try {
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            loginError.style.display = 'none';
+
+            // Sign in with Firebase Auth
+            await auth.signInWithEmailAndPassword(email, password);
+            
+            // onAuthStateChanged will handle showing the dashboard
+            // Clear form
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        } catch (error) {
+            console.error('Login error:', error);
+            
+            // Handle different error types
+            let errorMessage = 'Login failed. Please try again.';
+            
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = 'No account found with this email.';
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = 'Incorrect password.';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Invalid email address.';
+            } else if (error.code === 'auth/too-many-requests') {
+                errorMessage = 'Too many failed login attempts. Please try again later.';
+            } else if (error.code === 'auth/network-request-failed') {
+                errorMessage = 'Network error. Please check your connection and try again.';
+            }
+            
+            showLoginError(errorMessage);
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
         }
     });
 }
 
 // Logout
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
+    logoutBtn.addEventListener('click', async () => {
         if (confirm('Are you sure you want to log out?')) {
-            localStorage.removeItem('adminLoggedIn');
-            window.location.href = 'admin.html';
+            try {
+                if (window.auth) {
+                    await auth.signOut();
+                    // onAuthStateChanged will handle showing the login form
+                } else {
+                    // Fallback if auth is not available
+                    showLogin();
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Failed to log out. Please try again.');
+            }
         }
     });
 }
@@ -74,11 +131,36 @@ if (searchInput) {
     searchInput.addEventListener('input', debounce(handleSearch, 300));
 }
 
+// Show login form
+function showLogin() {
+    if (document.getElementById('loginSection')) {
+        document.getElementById('loginSection').classList.remove('hidden');
+    }
+    if (dashboard) {
+        dashboard.classList.add('hidden');
+    }
+}
+
 // Show dashboard and load data
 function showDashboard() {
-    document.getElementById('loginSection').classList.add('hidden');
-    dashboard.classList.remove('hidden');
-    loadGuestData();
+    if (document.getElementById('loginSection')) {
+        document.getElementById('loginSection').classList.add('hidden');
+    }
+    if (dashboard) {
+        dashboard.classList.remove('hidden');
+        loadGuestData();
+    }
+}
+
+// Show login error
+function showLoginError(message) {
+    if (loginError) {
+        loginError.textContent = message;
+        loginError.style.display = 'block';
+        if (document.getElementById('password')) {
+            document.getElementById('password').focus();
+        }
+    }
 }
 
 // Load guest data from Firestore

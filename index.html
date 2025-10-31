@@ -39,7 +39,7 @@
     <header id="home" class="hero">
         <div class="hero-content">
             <h1>Narce <span>&</span> Gemima</h1>
-            <p class="date" data-translate="hero_date">December 16, 2025</p>
+            <p class="date" data-translate="hero_date">16 December 2025 at 09:00</p>
             <p class="location" data-translate="hero_location">Plot 16, N14 &, Steyn Rd, Krugersdorp</p>
             <a href="#rsvp" class="cta-button" data-translate="hero_cta">RSVP Now</a>
         </div>
@@ -76,16 +76,15 @@
                 <div class="detail-card">
                     <i class="far fa-calendar-alt"></i>
                     <h3 data-translate="details_when">When</h3>
-                    <p data-translate="details_when_date">Monday, December 16, 2025</p>
-                    <p data-translate="details_when_ceremony">Ceremony: 9:00 AM</p>
+                    <p data-translate="details_when_date">16 December 2025</p>
+                    <p data-translate="details_when_ceremony">09:00</p>
                     <p data-translate="details_when_reception">Reception to follow</p>
                 </div>
-                <div class="detail-card">
+                <div class="detail-card" id="whereCard" style="cursor: pointer;" onclick="document.getElementById('locationMap').scrollIntoView({ behavior: 'smooth', block: 'center' })">
                     <i class="fas fa-map-marker-alt"></i>
                     <h3 data-translate="details_where">Where</h3>
-                    <p data-translate="details_where_venue">Plot 16, N14 &, Steyn Rd</p>
-                    <p data-translate="details_where_address1">Krugersdorp</p>
-                    <p data-translate="details_where_address2">South Africa</p>
+                    <p data-translate="details_where_venue">Plot 16, N14 &, Steyn Rd, Krugersdorp</p>
+                    <p style="color: #8B4513; font-weight: bold; margin-top: 10px;">📍 Click to view location</p>
                 </div>
                 <div class="detail-card">
                     <i class="fas fa-utensils"></i>
@@ -164,8 +163,7 @@
                         <h1 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;" data-translate="invitation_title">Wedding Invitation</h1>
                         <h2 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;" data-translate="invitation_couple_names">Narce & Gemima</h2>
                         <p style="text-align: center; font-size: 1.1em;" data-translate="invitation_message">We cordially invite you to celebrate our marriage</p>
-                        <p style="text-align: center; font-size: 1.2em; font-weight: bold;" data-translate="invitation_guest">Guest: <span id="pdfGuestName"></span></p>
-                        <p style="text-align: center; font-size: 1.2em; font-weight: bold;" data-translate="invitation_rsvp_code">RSVP Code: <span id="pdfRsvpCode"></span></p>
+                        <p style="text-align: center; font-size: 1.2em; font-weight: bold; margin-bottom: 20px;" data-translate="invitation_guest">Guest: <span id="pdfGuestName"></span></p>
 
                         <h3 style="text-align: center; color: #8B4513;" data-translate="invitation_ceremony_reception">Ceremony & Reception</h3>
                         <p style="text-align: center; font-size: 1.1em; font-weight: bold;" data-translate="invitation_date">Date: 16 December 2025 at 09:00</p>
@@ -180,6 +178,36 @@
                         <p style="text-align: center; font-size: 0.9em;" data-translate="invitation_proof_text">This document serves as proof of RSVP.</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Map Section -->
+    <section id="locationMap" class="section" style="background: #f9f9f9; padding: 60px 0;">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 30px;" data-translate="location_map_title">Wedding Venue Location</h2>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <p style="font-size: 1.2em; color: #8B4513; font-weight: bold;">Plot 16, N14 &, Steyn Rd, Krugersdorp</p>
+                <p style="margin-top: 10px;">16 December 2025 at 09:00</p>
+            </div>
+            <div style="width: 100%; max-width: 800px; margin: 0 auto; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <iframe 
+                    src="https://www.google.com/maps?q=Plot+16,+N14+%26+Steyn+Rd,+Krugersdorp,+South+Africa&output=embed" 
+                    width="100%" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="https://maps.google.com/?q=Plot+16,+N14+%26+Steyn+Rd,+Krugersdorp" 
+                   target="_blank" 
+                   style="display: inline-block; padding: 12px 24px; background: #8B4513; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s;"
+                   onmouseover="this.style.background='#6B3413'"
+                   onmouseout="this.style.background='#8B4513'"
+                   data-translate="location_open_maps">📍 Open in Google Maps</a>
             </div>
         </div>
     </section>
