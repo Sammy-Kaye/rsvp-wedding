@@ -10,13 +10,7 @@ const rsvpForm = document.getElementById('rsvpForm');
 const rsvpSuccess = document.getElementById('rsvpSuccess');
 const guestNameElement = document.getElementById('guestName');
 const rsvpOptions = document.querySelectorAll('.rsvp-option');
-const downloadInviteBtn = document.getElementById('downloadInvite');
-const scrollDown = document.querySelector('.scroll-down');
 
-const invitationModal = document.getElementById('invitationModal');
-const closeButton = document.querySelector('#invitationModal .close-button');
-const viewInvitationBtn = document.getElementById('viewInvitationBtn');
-const downloadInvitationBtn = document.getElementById('downloadInvitationBtn');
 
 
 
@@ -267,13 +261,15 @@ async function submitRSVP(response) {
         codeElement.textContent = `Your RSVP Code: ${uniqueCode}`;
         
         const successMessage = document.querySelector('.success-message');
-        const downloadButton = document.getElementById('downloadInvite');
-        successMessage.insertBefore(codeElement, downloadButton);
-
         if (response === 'attending') {
-            downloadButton.style.display = 'block';
+            // Automatically generate and download the invitation
+            generateAndDownloadInvitation();
         } else {
-            downloadButton.style.display = 'none';
+            // Hide the download button if not attending
+            const downloadButton = document.getElementById('downloadInvite');
+            if(downloadButton) {
+                downloadButton.style.display = 'none';
+            }
         }
         
     } catch (error) {
@@ -282,116 +278,78 @@ async function submitRSVP(response) {
     }
 }
 
-// Generate a unique code for the guest
-function generateUniqueCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 6; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-}
 
-// Download invitation (now opens modal)
-if (downloadInviteBtn) {
-    downloadInviteBtn.addEventListener('click', async () => {
-        console.log('Download invite button clicked');
-        console.log('Current guest:', currentGuest);
-        
-        if (!currentGuest || !currentGuest.name || !currentGuest.code) {
-            console.error('No guest selected or guest data incomplete');
-            alert('Please select a guest first');
+
+async function generateAndDownloadInvitation() {
+    console.log('Generating and downloading invitation...');
+    
+    if (!currentGuest || !currentGuest.name || !currentGuest.code) {
+        console.error('No guest selected or guest data incomplete');
+        alert('Please select a guest first');
+        return;
+    }
+
+    const invitationContent = document.getElementById('invitationContent');
+    if (!invitationContent) {
+        console.error('invitationContent element not found in DOM');
+        alert('Error: Could not load invitation. Please refresh the page and try again.');
+        return;
+    }
+
+    // Make sure the content is visible for html2canvas
+    invitationContent.style.display = 'block';
+    
+    const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.png`;
+    const qrcodeContainer = document.getElementById('qrcodeContainer');
+
+    try {
+        const pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
+        const pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
+
+        if (!pdfGuestNameElement || !pdfRsvpCodeElement || !qrcodeContainer) {
+            const missingElements = [
+                !pdfGuestNameElement ? 'Guest Name' : null,
+                !pdfRsvpCodeElement ? 'RSVP Code' : null,
+                !qrcodeContainer ? 'QR Code Container' : null
+            ].filter(Boolean);
+            
+            console.error('Missing required elements:', missingElements);
+            alert(`Error: Could not generate invitation. Missing: ${missingElements.join(', ')}`);
             return;
         }
 
-        // Show the modal first
-        if (invitationModal) {
-            invitationModal.style.display = 'flex';
-        }
+        pdfGuestNameElement.textContent = currentGuest.name;
+        pdfRsvpCodeElement.textContent = currentGuest.code;
 
-        // Small delay to ensure DOM is updated
-        setTimeout(async () => {
-            const invitationContent = document.getElementById('invitationContent');
-            if (!invitationContent) {
-                console.error('invitationContent element not found in DOM');
-                alert('Error: Could not load invitation. Please refresh the page and try again.');
-                return;
-            }
+        qrcodeContainer.innerHTML = '';
+        new QRCode(qrcodeContainer, {
+            text: currentGuest.code,
+            width: 128,
+            height: 128,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
 
-            // Make sure the content is visible for html2canvas
-            invitationContent.style.display = 'block';
-            
-            const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.png`;
-            const qrcodeContainer = document.getElementById('qrcodeContainer');
-
-            try {
-                // Use more specific selectors that match your HTML structure
-                const pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
-                const pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
-
-                console.log('PDF Elements:', {
-                    pdfGuestNameElement: pdfGuestNameElement ? 'Found' : 'Not found',
-                    pdfRsvpCodeElement: pdfRsvpCodeElement ? 'Found' : 'Not found',
-                    qrcodeContainer: qrcodeContainer ? 'Found' : 'Not found'
-                });
-
-                if (!pdfGuestNameElement || !pdfRsvpCodeElement || !qrcodeContainer) {
-                    const missingElements = [
-                        !pdfGuestNameElement ? 'Guest Name' : null,
-                        !pdfRsvpCodeElement ? 'RSVP Code' : null,
-                        !qrcodeContainer ? 'QR Code Container' : null
-                    ].filter(Boolean);
-                    
-                    console.error('Missing required elements:', missingElements);
-                    alert(`Error: Could not generate invitation. Missing: ${missingElements.join(', ')}`);
-                    return;
-                }
-
-                // Update the elements
-                pdfGuestNameElement.textContent = currentGuest.name;
-                pdfRsvpCodeElement.textContent = currentGuest.code;
-
-                // Generate QR code
-                qrcodeContainer.innerHTML = ''; // Clear previous QR code
-                try {
-                    new QRCode(qrcodeContainer, {
-                        text: currentGuest.code,
-                        width: 128,
-                        height: 128,
-                        colorDark: '#000000',
-                        colorLight: '#ffffff',
-                        correctLevel: QRCode.CorrectLevel.H
-                    });
-                } catch (qrError) {
-                    console.error('Error generating QR code:', qrError);
-                    alert('Error generating QR code. Please try again.');
-                    return;
-                }
-
-                // Temporarily show the invitation content for image generation
-                invitationContent.style.display = 'block';
-                        
-                // Wait for QR code to render and content to be fully visible
-                await new Promise(resolve => setTimeout(resolve, 1000)); 
-                        
-            html2canvas(invitationContent).then(canvas => {
-                const imageDataURL = canvas.toDataURL('image/png');
+        await new Promise(resolve => setTimeout(resolve, 1000)); 
                 
-                // Store the image data URL and file name globally or pass to modal handlers
-                window.generatedInvitationImage = imageDataURL;
-                window.generatedInvitationFileName = fileName;
+        const canvas = await html2canvas(invitationContent);
+        const imageDataURL = canvas.toDataURL('image/png');
+        
+        const a = document.createElement('a');
+        a.href = imageDataURL;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
 
-                // Hide the invitation content again after image generation
-                invitationContent.style.display = 'none';
+        invitationContent.style.display = 'none';
 
-                // Open the modal
-                invitationModal.style.display = 'flex'; // Use flex to center
-            });
-        } catch (error) {
-            console.error('Error generating image:', error);
-            alert('Failed to generate image invitation. Please try again or contact the couple.');
-        }
-    });
+    } catch (error) {
+        console.error('Error generating image:', error);
+        alert('Failed to generate image invitation. Please try again or contact the couple.');
+        invitationContent.style.display = 'none';
+    }
 }
 
 // Show a message to the user
@@ -481,46 +439,4 @@ async function submitRsvp(data) {
   return id;
 }
 
-// Modal close button
-if (closeButton) {
-    closeButton.addEventListener('click', () => {
-        invitationModal.style.display = 'none';
-    });
-}
 
-// Close modal when clicking outside
-window.addEventListener('click', (event) => {
-    if (event.target === invitationModal) {
-        invitationModal.style.display = 'none';
-    }
-});
-
-// View Invitation button
-if (viewInvitationBtn) {
-    viewInvitationBtn.addEventListener('click', () => {
-        if (window.generatedInvitationImage) {
-            const newTab = window.open();
-            newTab.document.body.innerHTML = `<img src="${window.generatedInvitationImage}" style="max-width: 100%; height: auto;">`;
-            invitationModal.style.display = 'none';
-        } else {
-            alert('No invitation image generated. Please try again.');
-        }
-    });
-}
-
-// Download Invitation button
-if (downloadInvitationBtn) {
-    downloadInvitationBtn.addEventListener('click', () => {
-        if (window.generatedInvitationImage && window.generatedInvitationFileName) {
-            const a = document.createElement('a');
-            a.href = window.generatedInvitationImage;
-            a.download = window.generatedInvitationFileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            invitationModal.style.display = 'none';
-        } else {
-            alert('No invitation image generated. Please try again.');
-        }
-    });
-}
