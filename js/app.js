@@ -342,7 +342,17 @@ async function generateAndDownloadInvitation() {
             qrcodeContainer = document.createElement('div');
             qrcodeContainer.id = 'qrcodeContainer';
             qrcodeContainer.style.margin = '20px auto';
+            qrcodeContainer.style.textAlign = 'center';
+            qrcodeContainer.style.display = 'flex';
+            qrcodeContainer.style.justifyContent = 'center';
+            qrcodeContainer.style.alignItems = 'center';
             invitationContent.appendChild(qrcodeContainer);
+        } else {
+            // Ensure existing QR code container is properly centered
+            qrcodeContainer.style.textAlign = 'center';
+            qrcodeContainer.style.display = 'flex';
+            qrcodeContainer.style.justifyContent = 'center';
+            qrcodeContainer.style.alignItems = 'center';
         }
 
         qrcodeContainer.innerHTML = '';
@@ -368,6 +378,49 @@ async function generateAndDownloadInvitation() {
 
         pdfGuestNameElement.textContent = currentGuest.name;
         pdfRsvpCodeElement.textContent = currentGuest.code;
+        
+        // Ensure date and address are in correct format
+        const dateElement = invitationContent.querySelector('[data-translate="invitation_date"]');
+        if (dateElement) {
+            dateElement.textContent = 'Date: 16 December 2025 at 09:00';
+            dateElement.style.fontSize = '1.1em';
+            dateElement.style.fontWeight = 'bold';
+        }
+        
+        // Remove old separate time element if it exists
+        const oldTimeElement = invitationContent.querySelector('[data-translate="invitation_time"]');
+        if (oldTimeElement) {
+            oldTimeElement.style.display = 'none';
+        }
+        
+        const venueElement = invitationContent.querySelector('[data-translate="invitation_venue"]');
+        if (venueElement) {
+            venueElement.textContent = 'Plot 16, N14 &, Steyn Rd, Krugersdorp';
+            venueElement.style.fontSize = '1.1em';
+        }
+        
+        // Hide or remove old address elements if they exist separately
+        const oldAddress1 = invitationContent.querySelector('[data-translate="invitation_address1"]');
+        if (oldAddress1 && oldAddress1 !== venueElement) {
+            oldAddress1.style.display = 'none';
+        }
+        const oldAddress2 = invitationContent.querySelector('[data-translate="invitation_address2"]');
+        if (oldAddress2 && oldAddress2 !== venueElement) {
+            oldAddress2.style.display = 'none';
+        }
+        
+        // Wait for venue image to load before generating canvas
+        const venueImage = invitationContent.querySelector('#venueImage');
+        if (venueImage && venueImage.src) {
+            if (!venueImage.complete) {
+                await new Promise((resolve, reject) => {
+                    venueImage.onload = resolve;
+                    venueImage.onerror = resolve; // Continue even if image fails to load
+                    // Timeout after 3 seconds
+                    setTimeout(resolve, 3000);
+                });
+            }
+        }
                 
         const canvas = await html2canvas(invitationContent);
         const imageDataURL = canvas.toDataURL('image/png');
