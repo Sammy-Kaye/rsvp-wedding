@@ -709,39 +709,65 @@ footer .copyright {
 
 /* Language Toggle */
 .lang-toggle {
-    display: flex;
-    gap: 0;
+    position: relative;
     margin-left: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 25px;
-    padding: 3px;
-    border: 1px solid rgba(139, 94, 60, 0.3);
-    backdrop-filter: blur(10px);
 }
 
-.lang-button {
-    background-color: transparent;
-    color: var(--light-text);
-    border: none;
+.lang-toggle-btn {
+    background-color: var(--primary-color);
+    color: white;
     padding: 8px 16px;
     border-radius: 20px;
     cursor: pointer;
     font-weight: 500;
     font-size: 0.9rem;
     transition: all 0.3s ease;
-    min-width: 45px;
-    text-align: center;
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.lang-toggle-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.lang-toggle-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    display: none;
+    z-index: 1001;
+}
+
+.lang-toggle-dropdown.active {
+    display: block;
+}
+
+.lang-button {
+    background-color: transparent;
+    color: var(--text-color);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: block;
+    width: 100%;
+    text-align: left;
 }
 
 .lang-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--light-text);
+    background-color: #f9f5f0;
+    color: var(--primary-color);
 }
 
 .lang-button.active {
     background-color: var(--primary-color);
     color: white;
-    box-shadow: 0 2px 8px rgba(139, 94, 60, 0.3);
-    transform: scale(1.05);
 }

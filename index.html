@@ -23,8 +23,15 @@
                 <a href="#rsvp" class="rsvp-btn" data-translate="nav_rsvp">RSVP</a>
                 <a href="admin.html" class="admin-btn"><i class="fas fa-lock"></i></a>
                 <div class="lang-toggle">
-                    <button id="langToggleEn" class="lang-button">EN</button>
-                    <button id="langToggleFr" class="lang-button">FR</button>
+                    <button class="lang-toggle-btn">
+                        <i class="fas fa-globe"></i>
+                        <span id="current-lang">EN</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="lang-toggle-dropdown">
+                        <button id="langToggleEn" class="lang-button active">English</button>
+                        <button id="langToggleFr" class="lang-button">Français</button>
+                    </div>
                 </div>
             </div>
             <button class="mobile-menu-btn">
@@ -39,8 +46,8 @@
     <header id="home" class="hero">
         <div class="hero-content">
             <h1>Narce <span>&</span> Gemima</h1>
-            <p class="date" data-translate="hero_date">16 December 2025 at 09:00</p>
-            <p class="location" data-translate="hero_location">Plot 16, N14 &, Steyn Rd, Krugersdorp</p>
+            <p class="date" data-translate="hero_date">December 16, 2025</p>
+            <p class="location" data-translate="hero_location">Usambara Wedding Venue</p>
             <a href="#rsvp" class="cta-button" data-translate="hero_cta">RSVP Now</a>
         </div>
         <div class="scroll-down">
@@ -76,15 +83,14 @@
                 <div class="detail-card">
                     <i class="far fa-calendar-alt"></i>
                     <h3 data-translate="details_when">When</h3>
-                    <p data-translate="details_when_date">16 December 2025</p>
-                    <p data-translate="details_when_ceremony">09:00</p>
+                    <p data-translate="details_when_date">Tuesday, December 16, 2025</p>
+                    <p data-translate="details_when_ceremony">Ceremony: 9:00 AM</p>
                     <p data-translate="details_when_reception">Reception to follow</p>
                 </div>
-                <div class="detail-card" id="whereCard" style="cursor: pointer;" onclick="document.getElementById('locationMap').scrollIntoView({ behavior: 'smooth', block: 'center' })">
+                <div class="detail-card">
                     <i class="fas fa-map-marker-alt"></i>
                     <h3 data-translate="details_where">Where</h3>
-                    <p data-translate="details_where_venue">Plot 16, N14 &, Steyn Rd, Krugersdorp</p>
-                    <p style="color: #8B4513; font-weight: bold; margin-top: 10px;">📍 Click to view location</p>
+                    <p data-translate="details_where_venue">Usambara Wedding Venue</p>
                 </div>
                 <div class="detail-card">
                     <i class="fas fa-utensils"></i>

@@ -1,3 +1,36 @@
+// Language Toggle
+const langToggleBtn = document.querySelector('.lang-toggle-btn');
+const langToggleDropdown = document.querySelector('.lang-toggle-dropdown');
+const currentLang = document.getElementById('current-lang');
+const langToggleEn = document.getElementById('langToggleEn');
+const langToggleFr = document.getElementById('langToggleFr');
+
+if (langToggleBtn) {
+    langToggleBtn.addEventListener('click', () => {
+        langToggleDropdown.classList.toggle('active');
+    });
+
+    window.addEventListener('click', (e) => {
+        if (!langToggleBtn.contains(e.target)) {
+            langToggleDropdown.classList.remove('active');
+        }
+    });
+}
+
+if (langToggleEn) {
+    langToggleEn.addEventListener('click', () => {
+        currentLang.textContent = 'EN';
+        langToggleDropdown.classList.remove('active');
+    });
+}
+
+if (langToggleFr) {
+    langToggleFr.addEventListener('click', () => {
+        currentLang.textContent = 'FR';
+        langToggleDropdown.classList.remove('active');
+    });
+}
+
 // DOM Elements
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const navLinks = document.querySelector('.nav-links');
