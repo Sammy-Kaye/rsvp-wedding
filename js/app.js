@@ -308,9 +308,43 @@ async function generateAndDownloadInvitation() {
     invitationContent.style.display = 'block';
     
     const fileName = `Wedding-Invitation-${currentGuest.name.replace(/\s+/g, '-')}.png`;
-    const qrcodeContainer = document.getElementById('qrcodeContainer');
+    // Prefer scoping to invitationContent; create missing nodes if needed (supports admin page)
+    let qrcodeContainer = invitationContent.querySelector('#qrcodeContainer');
 
     try {
+        // Ensure required elements exist
+        let pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
+        let pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
+
+        if (!pdfGuestNameElement) {
+            const nameP = document.createElement('p');
+            nameP.style.textAlign = 'center';
+            nameP.style.fontSize = '1.2em';
+            nameP.style.fontWeight = 'bold';
+            nameP.setAttribute('data-translate', 'invitation_guest');
+            nameP.innerHTML = 'Guest: <span id="pdfGuestName"></span>';
+            invitationContent.appendChild(nameP);
+            pdfGuestNameElement = nameP.querySelector('#pdfGuestName');
+        }
+
+        if (!pdfRsvpCodeElement) {
+            const codeP = document.createElement('p');
+            codeP.style.textAlign = 'center';
+            codeP.style.fontSize = '1.2em';
+            codeP.style.fontWeight = 'bold';
+            codeP.setAttribute('data-translate', 'invitation_rsvp_code');
+            codeP.innerHTML = 'RSVP Code: <span id="pdfRsvpCode"></span>';
+            invitationContent.appendChild(codeP);
+            pdfRsvpCodeElement = codeP.querySelector('#pdfRsvpCode');
+        }
+
+        if (!qrcodeContainer) {
+            qrcodeContainer = document.createElement('div');
+            qrcodeContainer.id = 'qrcodeContainer';
+            qrcodeContainer.style.margin = '20px auto';
+            invitationContent.appendChild(qrcodeContainer);
+        }
+
         qrcodeContainer.innerHTML = '';
         new QRCode(qrcodeContainer, {
             text: currentGuest.code,
@@ -322,10 +356,11 @@ async function generateAndDownloadInvitation() {
         });
 
         await new Promise(resolve => setTimeout(resolve, 1000)); 
-
-        const pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
-        const pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
-
+        
+        // Re-query (in case of DOM changes) and validate
+        pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
+        pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
+        
         if (!pdfGuestNameElement || !pdfRsvpCodeElement) {
             console.error('Could not find guest name or rsvp code element');
             return;
