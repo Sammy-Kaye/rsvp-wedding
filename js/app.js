@@ -511,12 +511,13 @@ async function generateAndDownloadInvitation() {
         // Create QR code container
         const qrCodeDiv = document.createElement('div');
         qrCodeDiv.id = 'qrcode';
-        qrCodeContainer.appendChild(qrCodeDiv);
+        qrcodeContainer.appendChild(qrCodeDiv);
         
         // Generate QR code
         new QRCode(qrCodeDiv, {
             text: currentGuest.code,
             width: 150,
+            
             height: 150,
             colorDark: '#8B4513',
             colorLight: '#ffffff',
