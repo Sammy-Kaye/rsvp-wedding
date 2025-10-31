@@ -3,9 +3,7 @@ const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const navLinks = document.querySelector('.nav-links');
 const nav = document.querySelector('nav');
 const guestSearch = document.getElementById('guestSearch');
-const searchResults = document.getElementById('searchResults');
-let allGuests = []; // Initialize guests array
-const searchResults = document.getElementById('searchResults');
+
 const rsvpForm = document.getElementById('rsvpForm');
 const rsvpSuccess = document.getElementById('rsvpSuccess');
 const guestNameElement = document.getElementById('guestName');
