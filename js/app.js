@@ -448,21 +448,44 @@ async function generateAndDownloadInvitation() {
         let pdfGuestNameElement = invitationContent.querySelector('#pdfGuestName');
         let pdfRsvpCodeElement = invitationContent.querySelector('#pdfRsvpCode');
 
+        // Create or update guest name section at the top
         if (!pdfGuestNameElement) {
-            const nameP = document.createElement('p');
-            nameP.style.textAlign = 'center';
-            nameP.style.fontSize = '1.2em';
-            nameP.style.fontWeight = 'bold';
-            nameP.setAttribute('data-translate', 'invitation_guest');
-            nameP.innerHTML = 'Guest: <span id="pdfGuestName"></span>';
-            invitationContent.appendChild(nameP);
-            pdfGuestNameElement = nameP.querySelector('#pdfGuestName');
+            const nameSection = document.createElement('div');
+            nameSection.style.textAlign = 'center';
+            nameSection.style.marginBottom = '20px';
+            nameSection.style.padding = '15px';
+            nameSection.style.backgroundColor = '#f8f8f8';
+            nameSection.style.borderRadius = '8px';
+            
+            const nameLabel = document.createElement('div');
+            nameLabel.textContent = 'Guest:';
+            nameLabel.style.fontSize = '1.1em';
+            nameLabel.style.marginBottom = '5px';
+            nameLabel.style.color = '#555';
+            
+            const nameValue = document.createElement('div');
+            nameValue.id = 'pdfGuestName';
+            nameValue.style.fontSize = '1.4em';
+            nameValue.style.fontWeight = 'bold';
+            nameValue.style.color = '#8B4513';
+            
+            nameSection.appendChild(nameLabel);
+            nameSection.appendChild(nameValue);
+            
+            // Insert at the top of the invitation content
+            if (invitationContent.firstChild) {
+                invitationContent.insertBefore(nameSection, invitationContent.firstChild);
+            } else {
+                invitationContent.appendChild(nameSection);
+            }
+            
+            pdfGuestNameElement = nameValue;
         }
 
-        // RSVP Code is no longer displayed as text since it's in the QR code
-        // But we keep the element query in case it exists in older templates
+        // We now handle the RSVP code display in the QR code section
+        // This is kept for backward compatibility
         if (pdfRsvpCodeElement) {
-            pdfRsvpCodeElement.textContent = currentGuest.code;
+            pdfRsvpCodeElement.style.display = 'none'; // Hide the old code display
         }
 
         if (!qrcodeContainer) {
@@ -482,15 +505,29 @@ async function generateAndDownloadInvitation() {
             qrcodeContainer.style.alignItems = 'center';
         }
 
+        // Clear the container and set up QR code
         qrcodeContainer.innerHTML = '';
-        new QRCode(qrcodeContainer, {
+        
+        // Create QR code container
+        const qrCodeDiv = document.createElement('div');
+        qrCodeDiv.id = 'qrcode';
+        qrCodeContainer.appendChild(qrCodeDiv);
+        
+        // Generate QR code
+        new QRCode(qrCodeDiv, {
             text: currentGuest.code,
-            width: 128,
-            height: 128,
-            colorDark: '#000000',
+            width: 150,
+            height: 150,
+            colorDark: '#8B4513',
             colorLight: '#ffffff',
             correctLevel: QRCode.CorrectLevel.H
         });
+        
+        // Update the RSVP code text
+        const rsvpCodeText = document.getElementById('rsvpCodeText');
+        if (rsvpCodeText) {
+            rsvpCodeText.textContent = currentGuest.code;
+        }
 
         await new Promise(resolve => setTimeout(resolve, 1000)); 
         

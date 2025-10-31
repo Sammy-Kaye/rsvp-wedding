@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="page_title">Narce & Gemima's Wedding</title>
+    <title data-translate="page_title">Narce & Jemima's Wedding</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
     <!-- Navigation -->
     <nav>
         <div class="container">
-            <div class="nav-logo">N&G</div>
+            <div class="nav-logo">N&J</div>
             <div class="nav-links">
                 <a href="#home" data-translate="nav_home">Home</a>
                 <a href="#story" data-translate="nav_story">Our Story</a>
@@ -45,7 +45,7 @@
     <!-- Hero Section -->
     <header id="home" class="hero">
         <div class="hero-content">
-            <h1>Narce <span>&</span> Gemima</h1>
+            <h1>Narce <span>&</span> Jemima</h1>
             <p class="date" data-translate="hero_date">December 16, 2025</p>
             <p class="location" data-translate="hero_location">Usambara Wedding Venue</p>
             <a href="#rsvp" class="cta-button" data-translate="hero_cta">RSVP Now</a>
@@ -68,7 +68,7 @@
                 <div class="story-image">
                     <div class="placeholder">
                         <i class="fas fa-heart"></i><br>
-                        Narce & Gemima
+                        Narce & Jemima
                     </div>
                 </div>
             </div>
@@ -165,23 +165,42 @@
                     </div>
 
                     <!-- Hidden Invitation Content for Image Generation -->
-                    <div id="invitationContent" style="display: none; padding: 20px; font-family: 'Montserrat', sans-serif; color: #333;">
-                        <h1 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;" data-translate="invitation_title">Wedding Invitation</h1>
-                        <h2 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif;" data-translate="invitation_couple_names">Narce & Gemima</h2>
-                        <p style="text-align: center; font-size: 1.1em;" data-translate="invitation_message">We cordially invite you to celebrate our marriage</p>
-                        <p style="text-align: center; font-size: 1.2em; font-weight: bold; margin-bottom: 20px;" data-translate="invitation_guest">Guest: <span id="pdfGuestName"></span></p>
-
-                        <h3 style="text-align: center; color: #8B4513;" data-translate="invitation_ceremony_reception">Ceremony & Reception</h3>
-                        <p style="text-align: center; font-size: 1.1em; font-weight: bold;" data-translate="invitation_date">Date: 16 December 2025 at 09:00</p>
-                        <p style="text-align: center; font-size: 1.1em;" data-translate="invitation_venue">Plot 16, N14 &, Steyn Rd, Krugersdorp</p>
-                        <div style="text-align: center; margin: 15px 0;">
-                            <img id="venueImage" src="IMG/venue.jpg" alt="Wedding Venue" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" onerror="this.style.display='none'">
+                    <div id="invitationContent" style="display: none; padding: 20px; font-family: 'Montserrat', sans-serif; color: #333; max-width: 600px; margin: 0 auto;">
+                        <!-- Guest Name Section (Top) -->
+                        <div style="background-color: #f9f5f0; border-radius: 10px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <p style="margin: 0; color: #8B4513; font-size: 1.1em;" data-translate="invitation_guest">Guest:</p>
+                            <p id="pdfGuestName" style="margin: 5px 0 0 0; font-size: 1.5em; font-weight: bold; color: #5c3a21;"></p>
                         </div>
 
-                        <div id="qrcodeContainer" style="margin: 20px auto; text-align: center; display: flex; justify-content: center; align-items: center;"></div>
+                        <!-- Wedding Info -->
+                        <h1 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif; margin-bottom: 10px;" data-translate="invitation_title">Wedding Invitation</h1>
+                        <h2 style="text-align: center; color: #8B4513; font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 20px;" data-translate="invitation_couple_names">Narce & Jemima</h2>
+                        
+                        <p style="text-align: center; font-size: 1.1em; margin-bottom: 25px;" data-translate="invitation_message">We cordially invite you to celebrate our marriage</p>
 
-                        <p style="text-align: center; font-size: 0.9em; margin-top: 20px;" data-translate="invitation_bring_text">Please bring this invitation to the venue.</p>
-                        <p style="text-align: center; font-size: 0.9em;" data-translate="invitation_proof_text">This document serves as proof of RSVP.</p>
+                        <div style="border-top: 1px solid #e0d6cc; border-bottom: 1px solid #e0d6cc; padding: 20px 0; margin: 20px 0;">
+                            <h3 style="text-align: center; color: #8B4513; margin-top: 0;" data-translate="invitation_ceremony_reception">Ceremony & Reception</h3>
+                            <p style="text-align: center; font-size: 1.2em; font-weight: bold; margin: 10px 0;" data-translate="invitation_date">16 December 2025 at 09:00</p>
+                            <p style="text-align: center; font-size: 1.1em; margin: 10px 0;" data-translate="invitation_venue">Plot 16, N14 &, Steyn Rd, Krugersdorp</p>
+                            
+                            <div style="text-align: center; margin: 20px 0;">
+                                <img id="venueImage" src="IMG/venue.jpg" alt="Wedding Venue" style="max-width: 100%; max-height: 200px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); object-fit: cover;" onerror="this.style.display='none'">
+                            </div>
+                        </div>
+
+                        <!-- QR Code Section -->
+                        <div id="qrcodeContainer" style="margin: 30px auto; text-align: center;">
+                            <p style="margin: 0 0 10px 0; color: #8B4513; font-weight: 500;">Your RSVP Code</p>
+                            <div style="display: inline-block; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <div id="qrcode"></div>
+                                <div id="rsvpCodeText" style="margin-top: 10px; font-family: monospace; font-size: 1.1em; letter-spacing: 1px; background: #f5f5f5; padding: 8px 15px; border-radius: 5px; display: inline-block;"></div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 30px; text-align: center;">
+                            <p style="font-size: 0.9em; margin: 5px 0;" data-translate="invitation_bring_text">Please bring this invitation to the venue.</p>
+                            <p style="font-size: 0.9em; margin: 5px 0;" data-translate="invitation_proof_text">This document serves as proof of RSVP.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -221,8 +240,8 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-                        <p data-translate="footer_love">With love, Narce & Gemima</p>
-                        <p class="copyright" data-translate="footer_copyright">© 2025 Narce & Gemima's Wedding. All rights reserved.</p>
+                        <p data-translate="footer_love">With love, Narce & Jemima</p>
+                        <p class="copyright" data-translate="footer_copyright">© 2025 Narce & Jemima's Wedding. All rights reserved.</p>
         </div>
     </footer>
 
