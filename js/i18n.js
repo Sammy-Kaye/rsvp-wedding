@@ -38,6 +38,18 @@ async function setLanguage(lang) {
 
     // Update active button state
     updateLangButtonActiveState();
+    
+    // Update current-lang display text
+    const currentLangDisplay = document.getElementById('current-lang');
+    if (currentLangDisplay) {
+        currentLangDisplay.textContent = lang.toUpperCase();
+    }
+    
+    // Close dropdown if open
+    const dropdown = document.querySelector('.lang-toggle-dropdown');
+    if (dropdown) {
+        dropdown.classList.remove('active');
+    }
 }
 
 function updateLangButtonActiveState() {
@@ -57,7 +69,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log(`Preferred language from localStorage: ${preferredLang}`);
     await setLanguage(preferredLang);
 
-    // Add language toggle buttons (example, you'll add these to HTML)
+    // Setup dropdown toggle button
+    const langToggleBtn = document.querySelector('.lang-toggle-btn');
+    const langToggleDropdown = document.querySelector('.lang-toggle-dropdown');
+    
+    if (langToggleBtn && langToggleDropdown) {
+        langToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langToggleDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!langToggleBtn.contains(e.target) && !langToggleDropdown.contains(e.target)) {
+                langToggleDropdown.classList.remove('active');
+            }
+        });
+    }
+
+    // Add language toggle buttons
     const langToggleEn = document.getElementById('langToggleEn');
     const langToggleFr = document.getElementById('langToggleFr');
 
@@ -65,11 +95,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('langToggleFr:', langToggleFr);
 
     if (langToggleEn) {
-        langToggleEn.addEventListener('click', () => setLanguage('en'));
+        langToggleEn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setLanguage('en');
+        });
         console.log('Event listener added to langToggleEn');
     }
     if (langToggleFr) {
-        langToggleFr.addEventListener('click', () => setLanguage('fr'));
+        langToggleFr.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setLanguage('fr');
+        });
         console.log('Event listener added to langToggleFr');
     }
 });
