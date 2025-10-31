@@ -139,6 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadAllGuests() {
     try {
         console.log('Loading guests from Firestore...');
+        // Use window.db to ensure we're using the global instance
+        const db = window.db || firebase.firestore();
         const querySnapshot = await db.collection('guests').get();
         
         if (querySnapshot.empty) {
@@ -311,6 +313,7 @@ function displaySearchResults(guests) {
 async function selectGuest(guest) {
     try {
         // Get the latest guest data from Firestore
+        const db = window.db || firebase.firestore();
         const guestDoc = await db.collection('guests').doc(guest.id).get();
         if (!guestDoc.exists) {
             showMessage('Error', 'Guest not found. Please contact the couple.');
@@ -359,6 +362,7 @@ async function submitRSVP(response) {
         const uniqueCode = currentGuest.code || generateUniqueCode();
         
         // Update guest in Firestore
+        const db = window.db || firebase.firestore();
         await db.collection('guests').doc(currentGuest.id).update({
             rsvp: response,
             code: uniqueCode,
@@ -630,6 +634,7 @@ window.addEventListener('load', () => {
 // ============== FIRESTORE HELPERS ==============
 // 1. Search for a guest by first+last name (case-insensitive)
 async function getGuest(first, last) {
+  const db = window.db || firebase.firestore();
   const snap = await db.collection('guests')
                        .where('first', '==', first.trim().toLowerCase())
                        .where('last', '==', last.trim().toLowerCase())
@@ -641,6 +646,7 @@ async function getGuest(first, last) {
 // 2. Save or update an RSVP document
 async function submitRsvp(data) {
   // data = {name:string, attending:bool, plusOne:bool, diet:string}
+  const db = window.db || firebase.firestore();
   const id = data.name.toLowerCase().replace(/\s+/g,'-');  // simple key
   await db.collection('rsvps').doc(id).set(data);
   return id;
