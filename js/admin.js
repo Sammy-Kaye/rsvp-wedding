@@ -108,14 +108,20 @@ if (!document.getElementById('notificationStyles')) {
     document.head.appendChild(style);
 }
 
-// Add Guest Modal Elements
-const addGuestBtn = document.getElementById('addGuestBtn');
-const addGuestModal = document.getElementById('addGuestModal');
-const addGuestForm = document.getElementById('addGuestForm');
-const guestNameInput = document.getElementById('guestName');
-const guestEmailInput = document.getElementById('guestEmail');
-const guestNotesInput = document.getElementById('guestNotes');
-const partySizeInput = document.getElementById('partySize');
+// Reset Guest Modal Elements
+const resetGuestBtn = document.getElementById('resetGuestBtn');
+const resetGuestModal = document.getElementById('resetGuestModal');
+const resetGuestForm = document.getElementById('resetGuestForm');
+const resetGuestNameInput = document.getElementById('resetGuestName');
+
+// Edit Guest Modal Elements
+const editGuestModal = document.getElementById('editGuestModal');
+const editGuestForm = document.getElementById('editGuestForm');
+const editGuestNameInput = document.getElementById('editGuestName');
+const editGuestEmailInput = document.getElementById('editGuestEmail');
+const editGuestNotesInput = document.getElementById('editGuestNotes');
+const editPartySizeInput = document.getElementById('editPartySize');
+let currentEditingGuestId = null;
 
 // Check authentication status on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -304,9 +310,20 @@ function generateCSV(guests) {
         guest.partySize || 1
     ]);
 
+    // Properly escape CSV fields
+    const escapeCSVField = (field) => {
+        if (field == null) return '';
+        const stringField = String(field);
+        // If field contains comma, quote, or newline, wrap in quotes and escape internal quotes
+        if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+            return '"' + stringField.replace(/"/g, '""') + '"';
+        }
+        return stringField;
+    };
+
     const csvContent = [headers, ...rows]
-        .map(row => row.map(field => `"${field}"`).join(','))
-        .join('\n');
+        .map(row => row.map(escapeCSVField).join(','))
+        .join('\r\n'); // Use \r\n for better Excel compatibility
 
     return csvContent;
 }
@@ -323,9 +340,29 @@ function downloadCSV(content, filename) {
     document.body.removeChild(link);
 }
 
-// Edit guest (placeholder - would need modal implementation)
+// Edit guest
 function editGuest(guestId) {
-    showNotification('Edit functionality coming soon!', 'info', 4000);
+    // Find the guest data
+    db.collection('guests').doc(guestId).get().then((doc) => {
+        if (doc.exists) {
+            const guest = doc.data();
+            currentEditingGuestId = guestId;
+
+            // Populate the edit form
+            editGuestNameInput.value = guest.name || '';
+            editGuestEmailInput.value = guest.email || '';
+            editGuestNotesInput.value = guest.notes || '';
+            editPartySizeInput.value = guest.partySize || 1;
+
+            // Show the modal
+            editGuestModal.classList.remove('hidden');
+        } else {
+            showNotification('Guest not found.', 'error', 4000);
+        }
+    }).catch((error) => {
+        console.error('Error getting guest:', error);
+        showNotification('Failed to load guest data.', 'error', 5000);
+    });
 }
 
 // Delete guest
@@ -344,82 +381,141 @@ async function deleteGuest(guestId) {
     }
 }
 
-// Modal functionality for add guest
-if (addGuestBtn) {
-    addGuestBtn.addEventListener('click', () => {
-        addGuestModal.classList.remove('hidden');
+// Modal functionality for reset guest
+if (resetGuestBtn) {
+    resetGuestBtn.addEventListener('click', () => {
+        resetGuestModal.classList.remove('hidden');
     });
 }
 
-if (addGuestForm) {
-    addGuestForm.addEventListener('submit', handleAddGuest);
+if (resetGuestForm) {
+    resetGuestForm.addEventListener('submit', handleResetGuest);
+}
+
+// Modal functionality for edit guest
+if (editGuestForm) {
+    editGuestForm.addEventListener('submit', handleEditGuest);
 }
 
 // Close modal functionality
 document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('close-modal') || e.target.id === 'cancelAddGuest') {
-        closeAddGuestModal();
+    if (e.target.classList.contains('close-modal')) {
+        closeAllModals();
+    }
+    if (e.target.id === 'cancelResetGuest') {
+        closeResetGuestModal();
+    }
+    if (e.target.id === 'cancelEditGuest') {
+        closeEditGuestModal();
     }
 });
 
-function closeAddGuestModal() {
-    addGuestModal.classList.add('hidden');
-    addGuestForm.reset();
+function closeAllModals() {
+    resetGuestModal.classList.add('hidden');
+    editGuestModal.classList.add('hidden');
+    resetGuestForm.reset();
+    editGuestForm.reset();
+    currentEditingGuestId = null;
 }
 
-async function handleAddGuest(e) {
+function closeResetGuestModal() {
+    resetGuestModal.classList.add('hidden');
+    resetGuestForm.reset();
+}
+
+function closeEditGuestModal() {
+    editGuestModal.classList.add('hidden');
+    editGuestForm.reset();
+    currentEditingGuestId = null;
+}
+
+async function handleResetGuest(e) {
     e.preventDefault();
 
-    const name = guestNameInput.value.trim();
-    const email = guestEmailInput.value.trim();
-    const notes = guestNotesInput.value.trim();
-    const partySize = parseInt(partySizeInput.value, 10);
+    const name = resetGuestNameInput.value.trim();
 
     if (!name) {
         showNotification('Please enter a guest name.', 'warning', 4000);
-        guestNameInput.focus();
+        resetGuestNameInput.focus();
+        return;
+    }
+
+    try {
+        // Find the guest by name
+        const guestQuery = await db.collection('guests')
+            .where('name', '==', name)
+            .limit(1)
+            .get();
+
+        if (guestQuery.empty) {
+            showNotification('Guest not found with that name.', 'warning', 4000);
+            resetGuestNameInput.focus();
+            return;
+        }
+
+        const guestDoc = guestQuery.docs[0];
+        const guestId = guestDoc.id;
+
+        // Generate new code and reset status
+        const newCode = generateUniqueCode();
+
+        await db.collection('guests').doc(guestId).update({
+            code: newCode,
+            rsvp: 'pending',
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        showNotification(`Guest code reset successfully! New code: ${newCode}`, 'success', 6000);
+        closeResetGuestModal();
+        loadGuestData();
+
+    } catch (error) {
+        console.error('Error resetting guest:', error);
+        showNotification('Failed to reset guest code.', 'error', 5000);
+    }
+}
+
+async function handleEditGuest(e) {
+    e.preventDefault();
+
+    if (!currentEditingGuestId) {
+        showNotification('No guest selected for editing.', 'error', 4000);
+        return;
+    }
+
+    const name = editGuestNameInput.value.trim();
+    const email = editGuestEmailInput.value.trim();
+    const notes = editGuestNotesInput.value.trim();
+    const partySize = parseInt(editPartySizeInput.value, 10);
+
+    if (!name) {
+        showNotification('Please enter a guest name.', 'warning', 4000);
+        editGuestNameInput.focus();
         return;
     }
 
     if (isNaN(partySize) || partySize < 1) {
         showNotification('Please enter a valid party size.', 'warning', 4000);
-        partySizeInput.focus();
+        editPartySizeInput.focus();
         return;
     }
 
     try {
-        // Check if guest already exists
-        const existingGuest = await db.collection('guests')
-            .where('name', '==', name)
-            .get();
-
-        if (!existingGuest.empty) {
-            showNotification('A guest with this name already exists.', 'warning', 4000);
-            guestNameInput.focus();
-            return;
-        }
-
-        // Add new guest to Firestore
-        const guestData = {
+        await db.collection('guests').doc(currentEditingGuestId).update({
             name: name,
             email: email || null,
             notes: notes || null,
             partySize: partySize,
-            rsvp: 'pending',
-            code: null,
-            lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        });
 
-        await db.collection('guests').add(guestData);
-
-        showNotification('Guest added successfully!', 'success', 4000);
-        closeAddGuestModal();
-        loadGuestData(); // Refresh the table
+        showNotification('Guest updated successfully!', 'success', 4000);
+        closeEditGuestModal();
+        loadGuestData();
 
     } catch (error) {
-        console.error('Error adding guest:', error);
-        showNotification('Failed to add guest. Please try again.', 'error', 5000);
+        console.error('Error updating guest:', error);
+        showNotification('Failed to update guest.', 'error', 5000);
     }
 }
 

@@ -411,8 +411,8 @@
         
         <div class="admin-actions">
             <div>
-                <button id="addGuestBtn" class="btn">
-                    <i class="fas fa-plus"></i> Add Guest
+                <button id="resetGuestBtn" class="btn">
+                    <i class="fas fa-refresh"></i> Reset Guest Code
                 </button>
                 <button id="refreshBtn" class="btn">
                     <i class="fas fa-sync-alt"></i> Refresh
@@ -445,33 +445,57 @@
             </div>
         </div>
         
-        <!-- Add Guest Modal -->
-        <div id="addGuestModal" class="modal hidden">
+        <!-- Reset Guest Modal -->
+        <div id="resetGuestModal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Add New Guest</h2>
+                    <h2>Reset Guest RSVP Code</h2>
                     <span class="close-modal">&times;</span>
                 </div>
-                <form id="addGuestForm">
+                <form id="resetGuestForm">
                     <div class="form-group">
-                        <label for="guestName">Guest Name *</label>
-                        <input type="text" id="guestName" required placeholder="Enter guest full name">
+                        <label for="resetGuestName">Guest Name *</label>
+                        <input type="text" id="resetGuestName" required placeholder="Enter guest full name to reset">
+                    </div>
+                    <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">
+                        This will generate a new RSVP code for the guest, allowing them to RSVP again.
+                        Their previous RSVP status will be reset to "pending".
+                    </p>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-cancel" id="cancelResetGuest">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Reset Code</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Edit Guest Modal -->
+        <div id="editGuestModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Edit Guest</h2>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <form id="editGuestForm">
+                    <div class="form-group">
+                        <label for="editGuestName">Guest Name *</label>
+                        <input type="text" id="editGuestName" required placeholder="Enter guest full name">
                     </div>
                     <div class="form-group">
-                        <label for="guestEmail">Email</label>
-                        <input type="email" id="guestEmail" placeholder="guest@email.com">
+                        <label for="editGuestEmail">Email</label>
+                        <input type="email" id="editGuestEmail" placeholder="guest@email.com">
                     </div>
                     <div class="form-group">
-                        <label for="partySize">Party Size *</label>
-                        <input type="number" id="partySize" required value="1" min="1">
+                        <label for="editPartySize">Party Size *</label>
+                        <input type="number" id="editPartySize" required value="1" min="1">
                     </div>
                     <div class="form-group">
-                        <label for="guestNotes">Notes (Optional)</label>
-                        <textarea id="guestNotes" placeholder="Any special notes about this guest..."></textarea>
+                        <label for="editGuestNotes">Notes (Optional)</label>
+                        <textarea id="editGuestNotes" placeholder="Any special notes about this guest..."></textarea>
                     </div>
                     <div class="modal-actions">
-                        <button type="button" class="btn btn-cancel" id="cancelAddGuest">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Guest</button>
+                        <button type="button" class="btn btn-cancel" id="cancelEditGuest">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Guest</button>
                     </div>
                 </form>
             </div>
