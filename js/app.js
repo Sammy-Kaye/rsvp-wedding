@@ -371,32 +371,25 @@ async function submitRSVP(response) {
         // Show success message
         rsvpForm.classList.add('hidden');
         rsvpSuccess.classList.remove('hidden');
-        
-        // Update success message
-        document.getElementById('guestGreeting').textContent = `Thank you, ${currentGuest.name}!`;
-        
-        // Scroll to success message
-        rsvpSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        // Show the unique code
-        const codeElement = document.createElement('div');
-        codeElement.style.margin = '20px 0';
-        codeElement.style.fontSize = '1.2rem';
-        codeElement.style.fontWeight = 'bold';
-        codeElement.style.color = 'var(--primary-color)';
-        codeElement.textContent = `Your RSVP Code: ${uniqueCode}`;
-        
+
+        // Update success message based on response
         const successMessage = document.querySelector('.success-message');
+        const titleElement = successMessage.querySelector('h3');
+        const messageElement = successMessage.querySelector('p');
+
         if (response === 'attending') {
+            titleElement.textContent = 'Thank you for your RSVP!';
+            messageElement.textContent = 'Your response has been recorded. We can\'t wait to celebrate with you!';
             // Automatically generate and download the invitation
             generateAndDownloadInvitation();
         } else {
-            // Hide the download button if not attending
-            const downloadButton = document.getElementById('downloadInvite');
-            if(downloadButton) {
-                downloadButton.style.display = 'none';
-            }
+            // Declined RSVP
+            titleElement.textContent = 'Thank you for your response';
+            messageElement.textContent = 'We wished to celebrate our special day with you. Thank you for letting us know.';
         }
+
+        // Scroll to success message
+        rsvpSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
         
     } catch (error) {
         console.error('Error submitting RSVP:', error);

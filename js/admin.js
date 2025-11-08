@@ -369,21 +369,18 @@ function editGuest(guestId) {
 
 // Reset guest code
 async function resetGuest(guestId) {
-    if (!confirm('Are you sure you want to reset this guest\'s RSVP code? This will generate a new code and reset their RSVP status to pending.')) {
+    if (!confirm('Are you sure you want to reset this guest\'s RSVP code? This will clear their code and reset their RSVP status to pending. A new code will be generated when they RSVP again.')) {
         return;
     }
 
     try {
-        // Generate new code
-        const newCode = generateUniqueCode();
-
         await db.collection('guests').doc(guestId).update({
-            code: newCode,
+            code: null,
             rsvp: 'pending',
             lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        showNotification(`Guest code reset successfully! New code: ${newCode}`, 'success', 6000);
+        showNotification('Guest code reset successfully! They can now RSVP again to receive a new code.', 'success', 6000);
         loadGuestData();
 
     } catch (error) {
@@ -477,16 +474,14 @@ async function handleResetGuest(e) {
         const guestDoc = guestQuery.docs[0];
         const guestId = guestDoc.id;
 
-        // Generate new code and reset status
-        const newCode = generateUniqueCode();
-
+        // Clear code and reset status to pending
         await db.collection('guests').doc(guestId).update({
-            code: newCode,
+            code: null,
             rsvp: 'pending',
             lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        showNotification(`Guest code reset successfully! New code: ${newCode}`, 'success', 6000);
+        showNotification('Guest code reset successfully! They can now RSVP again to receive a new code.', 'success', 6000);
         closeResetGuestModal();
         loadGuestData();
 
