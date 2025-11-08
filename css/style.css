@@ -368,6 +368,7 @@ nav.scrolled {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
+    grid-row-gap: 30px;
     margin-top: 50px;
 }
 
@@ -378,6 +379,8 @@ nav.scrolled {
     text-align: center;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: auto;
+    overflow: visible;
 }
 
 .detail-card:hover {
