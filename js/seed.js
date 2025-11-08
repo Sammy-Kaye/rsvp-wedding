@@ -188,7 +188,7 @@ async function seedGuests() {
           batch.set(docRef, {
             ...guestData,
             rsvp: 'pending',
-            code: generateUniqueCode(),
+            code: null,
             lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
           });      count++;

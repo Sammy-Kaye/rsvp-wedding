@@ -124,17 +124,6 @@ let guestsLoaded = false;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded, initializing...');
     // Guests will be loaded on demand
-
-    // Lazy load background images
-    const hero = document.getElementById('home');
-    if (hero) {
-        hero.style.backgroundImage = "url('IMG/Img1.jpg')";
-    }
-
-    const storyImage = document.querySelector('.story-image');
-    if (storyImage) {
-        storyImage.style.backgroundImage = "url('IMG/gallery/Img6.jpg')";
-    }
 });
 
 async function loadAllGuests() {
