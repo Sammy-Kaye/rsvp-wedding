@@ -118,25 +118,28 @@ if (!document.getElementById('notificationStyles')) {
     document.head.appendChild(style);
 }
 
+let guestsLoaded = false;
+
 // Load all guests from Firestore on page load
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded, initializing...');
-    loadAllGuests().then(() => {
-        console.log('Guests loaded successfully. Total guests:', allGuests.length);
-        
-        // Test search after loading
-        if (guestSearch) {
-            console.log('Adding input event listener to search field');
-            guestSearch.addEventListener('input', debounce(handleGuestSearch, 300));
-        } else {
-            console.error('Search input field not found!');
-        }
-    }).catch(error => {
-        console.error('Failed to load guests:', error);
-    });
+    // Guests will be loaded on demand
+
+    // Lazy load background images
+    const hero = document.getElementById('home');
+    if (hero) {
+        hero.style.backgroundImage = "url('IMG/Img1.jpg')";
+    }
+
+    const storyImage = document.querySelector('.story-image');
+    if (storyImage) {
+        storyImage.style.backgroundImage = "url('IMG/gallery/Img6.jpg')";
+    }
 });
 
 async function loadAllGuests() {
+    if (guestsLoaded) return;
+
     try {
         console.log('Loading guests from Firestore...');
         // Use window.db to ensure we're using the global instance
@@ -154,14 +157,8 @@ async function loadAllGuests() {
             allGuests.push(guestData);
         });
         
+        guestsLoaded = true;
         console.log(`Successfully loaded ${allGuests.length} guests`);
-        
-        // Test if we can find some elements
-        console.log('Testing DOM elements:', {
-            guestSearch: !!guestSearch,
-            searchResults: !!searchResults,
-            rsvpForm: !!rsvpForm
-        });
         
         return allGuests;
     } catch (error) {
@@ -187,7 +184,11 @@ function debounce(func, wait) {
 // Search input event listener is now added after guests are loaded
 
 // Handle guest search
-function handleGuestSearch(e) {
+async function handleGuestSearch(e) {
+    if (!guestsLoaded) {
+        await loadAllGuests();
+    }
+
     if (!e || !e.target || !searchResults) {
         console.error('Search function called with invalid parameters or searchResults element missing');
         return;
@@ -230,6 +231,11 @@ function handleGuestSearch(e) {
     }).slice(0, 10);
     
     displaySearchResults(matches);
+}
+
+// Add event listener to guest search input
+if (guestSearch) {
+    guestSearch.addEventListener('input', debounce(handleGuestSearch, 300));
 }
 
 // Mobile Menu Toggle
@@ -738,7 +744,13 @@ if (carousel) {
         } else {
             currentIndex = index;
         }
-        carouselItems[currentIndex].classList.add('active');
+        const currentItem = carouselItems[currentIndex];
+        const img = currentItem.querySelector('img');
+        if (img && img.dataset.src) {
+            img.src = img.dataset.src;
+            delete img.dataset.src;
+        }
+        currentItem.classList.add('active');
     }
 
     nextBtn.addEventListener('click', () => {
