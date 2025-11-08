@@ -16,9 +16,8 @@ if (!firebase.apps.length) {
   // Initialize Authentication
   const auth = firebase.auth();
   
-  // Initialize Firestore with settings
+  // Initialize Firestore
   const db = firebase.firestore();
-  db.settings({ timestampsInSnapshots: true });
   
   // Make db and auth available globally
   window.db = db;

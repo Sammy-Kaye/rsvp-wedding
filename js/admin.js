@@ -158,30 +158,32 @@ if (logoutBtn) {
 
 function showLogin() {
     loginSection.style.display = 'block';
-    dashboard.style.display = 'none';
+    dashboard.classList.add('hidden');
 }
 
 function showDashboard() {
     loginSection.style.display = 'none';
-    dashboard.style.display = 'block';
+    dashboard.classList.remove('hidden');
     loadGuestData();
 }
 
 // Load guest data from Firestore
 async function loadGuestData() {
     try {
-        const querySnapshot = await db.collection('guests').orderBy('createdAt', 'desc').get();
+        console.log('Loading guest data...');
+        const querySnapshot = await db.collection('guests').get();
         const guests = [];
 
         querySnapshot.forEach((doc) => {
             guests.push({ id: doc.id, ...doc.data() });
         });
 
+        console.log('Loaded guests:', guests.length);
         displayGuests(guests);
         updateStats(guests);
     } catch (error) {
         console.error('Error loading guest data:', error);
-        showNotification('Failed to load guest data.', 'error', 5000);
+        showNotification('Failed to load guest data: ' + error.message, 'error', 5000);
     }
 }
 
@@ -227,10 +229,10 @@ function displayGuests(guests) {
 
 // Update statistics cards
 function updateStats(guests) {
-    const totalGuests = guests.length;
-    const attendingCount = guests.filter(g => g.rsvp === 'attending').length;
-    const notAttendingCount = guests.filter(g => g.rsvp === 'not_attending').length;
-    const pendingCount = guests.filter(g => g.rsvp === 'pending').length;
+    const totalGuests = guests.reduce((sum, guest) => sum + (guest.partySize || 1), 0);
+    const attendingCount = guests.filter(g => g.rsvp === 'attending').reduce((sum, guest) => sum + (guest.partySize || 1), 0);
+    const notAttendingCount = guests.filter(g => g.rsvp === 'not_attending').reduce((sum, guest) => sum + (guest.partySize || 1), 0);
+    const pendingCount = guests.filter(g => g.rsvp === 'pending').reduce((sum, guest) => sum + (guest.partySize || 1), 0);
 
     document.getElementById('totalGuests').textContent = totalGuests;
     document.getElementById('attendingCount').textContent = attendingCount;
@@ -269,7 +271,7 @@ if (refreshBtn) {
 if (exportBtn) {
     exportBtn.addEventListener('click', async () => {
         try {
-            const querySnapshot = await db.collection('guests').orderBy('createdAt', 'desc').get();
+            const querySnapshot = await db.collection('guests').get();
             const guests = [];
 
             querySnapshot.forEach((doc) => {

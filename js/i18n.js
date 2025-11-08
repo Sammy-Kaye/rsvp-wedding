@@ -99,13 +99,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.stopPropagation();
             setLanguage('en');
         });
-        console.log('Event listener added to langToggleEn');
     }
     if (langToggleFr) {
         langToggleFr.addEventListener('click', (e) => {
             e.stopPropagation();
             setLanguage('fr');
         });
-        console.log('Event listener added to langToggleFr');
     }
 });
