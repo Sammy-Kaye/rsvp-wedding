@@ -54,7 +54,7 @@ async function setLanguage(lang) {
 
 function updateLangButtonActiveState() {
     document.querySelectorAll('.lang-button').forEach(button => {
-        if (button.id === `langToggle${currentLang.toUpperCase()}`) {
+        if (button.id === `langToggle${currentLang.charAt(0).toUpperCase() + currentLang.slice(1)}`) {
             button.classList.add('active');
         } else {
             button.classList.remove('active');
