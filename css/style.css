@@ -82,6 +82,12 @@ img {
     padding: 0 20px;
 }
 
+nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .section {
     padding: 80px 0;
 }
@@ -751,9 +757,10 @@ footer .copyright {
     
     .mobile-menu-btn {
         display: block;
-        position: fixed;
-        top: 20px;
-        right: 20px;
+        /* position: fixed; */ /* Removed fixed positioning */
+        /* top: 20px; */ /* Removed fixed positioning */
+        /* right: 20px; */ /* Removed fixed positioning */
+        order: 3; /* Place it after lang-toggle */
     }
     
     .mobile-menu-btn.active span:nth-child(1) {
@@ -769,11 +776,12 @@ footer .copyright {
     }
     
     .lang-toggle {
-        position: fixed;
-        top: 20px;
-        right: 80px; /* Adjust to not overlap with mobile menu button */
+        /* position: fixed; */ /* Removed fixed positioning */
+        /* top: 20px; */ /* Removed fixed positioning */
+        /* right: 80px; */ /* Removed fixed positioning */
         z-index: 1001; /* Ensure it's above other elements */
-        margin-left: 0; /* Remove previous margin */
+        margin-left: auto; /* Push it to the right */
+        order: 2; /* Place it after nav-logo */
     }
 
     .hero {
@@ -918,8 +926,16 @@ footer .copyright {
 
 /* Language Toggle */
 .lang-toggle {
-    position: relative;
-    margin-left: 20px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+}
+
+@media (max-width: 768px) {
+    .lang-toggle {
+        right: 80px; /* Adjust to not overlap with mobile menu button */
+    }
 }
 
 .lang-toggle-btn {

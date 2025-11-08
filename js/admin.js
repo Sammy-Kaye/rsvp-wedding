@@ -1,4 +1,5 @@
 // Admin Panel JS
+const loginSection = document.getElementById('loginSection');
 const loginBtn = document.getElementById('loginBtn');
 const loginError = document.getElementById('loginError');
 const dashboard = document.getElementById('dashboard');
@@ -115,6 +116,56 @@ const guestNameInput = document.getElementById('guestName');
 const guestEmailInput = document.getElementById('guestEmail');
 const guestNotesInput = document.getElementById('guestNotes');
 const partySizeInput = document.getElementById('partySize');
+
+// Check authentication status on page load
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.auth) {
+        window.auth.onAuthStateChanged((user) => {
+            if (user) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        });
+    }
+});
+
+// Login button click
+if (loginBtn) {
+    loginBtn.addEventListener('click', async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            await window.auth.signInWithEmailAndPassword(email, password);
+        } catch (error) {
+            loginError.textContent = error.message;
+            loginError.style.display = 'block';
+        }
+    });
+}
+
+// Logout button click
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            await window.auth.signOut();
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    });
+}
+
+function showLogin() {
+    loginSection.style.display = 'block';
+    dashboard.style.display = 'none';
+}
+
+function showDashboard() {
+    loginSection.style.display = 'none';
+    dashboard.style.display = 'block';
+    loadGuestData();
+}
 
 // ... (rest of the file)
 

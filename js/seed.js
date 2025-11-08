@@ -150,16 +150,16 @@ const GUEST_LIST = [
 
 async function clearGuests() {
   try {
-    const snapshot = await db.collection('guests').get();
+    const snapshot = await window.db.collection('guests').get();
     if (!snapshot.empty) {
-      let batch = db.batch();
+      let batch = window.db.batch();
       let count = 0;
       snapshot.forEach(doc => {
         batch.delete(doc.ref);
         count++;
         if (count % 500 === 0) {
           batch.commit();
-          batch = db.batch();
+          batch = window.db.batch();
         }
       });
       if (count % 500 !== 0) {
@@ -178,8 +178,8 @@ async function seedGuests() {
     console.log('Clearing existing guest list...');
     await clearGuests();
 
-    const guestsCollection = db.collection('guests');
-    let batch = db.batch();
+    const guestsCollection = window.db.collection('guests');
+    let batch = window.db.batch();
     let count = 0;
 
     for (const guest of GUEST_LIST) {
@@ -194,7 +194,7 @@ async function seedGuests() {
           });      count++;
       if (count % 500 === 0) {
         await batch.commit();
-        batch = db.batch();
+        batch = window.db.batch();
       }
     }
 
