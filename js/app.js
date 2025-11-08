@@ -551,7 +551,7 @@ async function generateAndDownloadInvitation() {
         // Ensure date and address are in correct format
         const dateElement = invitationContent.querySelector('[data-translate="invitation_date"]');
         if (dateElement) {
-            dateElement.textContent = 'Date: 16 December 2025 at 09:00';
+            dateElement.textContent = 'Date: 16 December 2025 at 12:00';
             dateElement.style.fontSize = '1.1em';
             dateElement.style.fontWeight = 'bold';
         }
@@ -690,4 +690,70 @@ async function submitRsvp(data) {
   return id;
 }
 
+// Countdown Timer
+const countdownDate = new Date("December 16, 2025 12:00:00").getTime();
 
+const countdownFunction = setInterval(function() {
+    const now = new Date().getTime();
+    const distance = countdownDate - now;
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    const countdownTimer = document.getElementById("countdown-timer");
+    if (countdownTimer) {
+        countdownTimer.innerHTML = `
+            <div class="countdown-item"><span>${days}</span><p>Days</p></div>
+            <div class="countdown-item"><span>${hours}</span><p>Hours</p></div>
+            <div class="countdown-item"><span>${minutes}</span><p>Minutes</p></div>
+            <div class="countdown-item"><span>${seconds}</span><p>Seconds</p></div>
+        `;
+    }
+
+    if (distance < 0) {
+        clearInterval(countdownFunction);
+        if (countdownTimer) {
+            countdownTimer.innerHTML = "<h2>The wedding day is here!</h2>";
+        }
+    }
+}, 1000);
+
+// Carousel
+const carousel = document.querySelector('.carousel');
+if (carousel) {
+    const carouselInner = carousel.querySelector('.carousel-inner');
+    const carouselItems = carousel.querySelectorAll('.carousel-item');
+    const prevBtn = carousel.querySelector('.carousel-control.prev');
+    const nextBtn = carousel.querySelector('.carousel-control.next');
+    let currentIndex = 0;
+
+    function showSlide(index) {
+        carouselItems.forEach(item => item.classList.remove('active'));
+        if (index >= carouselItems.length) {
+            currentIndex = 0;
+        } else if (index < 0) {
+            currentIndex = carouselItems.length - 1;
+        } else {
+            currentIndex = index;
+        }
+        carouselItems[currentIndex].classList.add('active');
+    }
+
+    nextBtn.addEventListener('click', () => {
+        showSlide(currentIndex + 1);
+    });
+
+    prevBtn.addEventListener('click', () => {
+        showSlide(currentIndex - 1);
+    });
+
+    setInterval(() => {
+        let randomIndex = currentIndex;
+        while (randomIndex === currentIndex) {
+            randomIndex = Math.floor(Math.random() * carouselItems.length);
+        }
+        showSlide(randomIndex);
+    }, 3000); // Change slide every 3 seconds
+}

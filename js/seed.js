@@ -89,6 +89,7 @@ const GUEST_LIST = [
   { id: 236, name: "Soeur Mukendi Kalonji-Ngoyi", partySize: 1, searchTerms: ["soeur", "mukendi", "kalonji", "ngoyi"] },
   { id: 237, name: "Soeur Ruth Seth", partySize: 1, searchTerms: ["soeur", "ruth", "seth"] },
   { id: 238, name: "Soeur Dorcas Nkulu", partySize: 1, searchTerms: ["soeur", "dorcas", "nkulu"] },
+  { id: 239, name: "Frère Christophe Kikanke", partySize: 1, searchTerms: ["frere", "christophe", "kikanke"] },
 
   // Bride's side - Couples
   { id: 300, name: "Couple Didiye Kangudia", partySize: 2, searchTerms: ["couple", "didiye", "kangudia"] },
@@ -143,6 +144,8 @@ const GUEST_LIST = [
   { id: 349, name: "Couple Mwepu", partySize: 2, searchTerms: ["couple", "mwepu"] },
   { id: 350, name: "Couple Mbuyu", partySize: 2, searchTerms: ["couple", "mbuyu"] },
   { id: 351, name: "Couple Mukendi", partySize: 2, searchTerms: ["couple", "mukendi"] },
+  { id: 352, name: "Couple Paul Kasongo", partySize: 2, searchTerms: ["couple", "couple paul kasongo"] },
+  { id: 353, name: "Couple Shadrac Mbay", partySize: 2, searchTerms: ["couple", "shadrac", "mbay"] },
 ];
 
 async function clearGuests() {
