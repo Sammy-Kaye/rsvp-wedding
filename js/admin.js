@@ -294,15 +294,14 @@ if (exportBtn) {
 }
 
 function generateCSV(guests) {
-    const headers = ['Name', 'Email', 'Party Size', 'RSVP Status', 'Code', 'Notes', 'Last Updated'];
-    const rows = guests.map(guest => [
+    // Filter to only attending guests
+    const attendingGuests = guests.filter(guest => guest.rsvp === 'attending');
+
+    const headers = ['Name', 'Code', 'Party Number'];
+    const rows = attendingGuests.map(guest => [
         guest.name,
-        guest.email || '',
-        guest.partySize || 1,
-        guest.rsvp || 'pending',
         guest.code || '',
-        guest.notes || '',
-        guest.lastUpdated ? guest.lastUpdated.toDate().toLocaleString() : ''
+        guest.partySize || 1
     ]);
 
     const csvContent = [headers, ...rows]
