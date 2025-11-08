@@ -349,32 +349,138 @@
         
         @media (max-width: 768px) {
             .admin-container {
-                margin: 20px;
+                margin: 15px;
                 padding: 20px;
             }
-            
-            .stats-cards {
-                grid-template-columns: 1fr 1fr;
+
+            .admin-header h1 {
+                font-size: 1.8rem;
             }
-            
+
+            .admin-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .admin-actions .btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-card h3 {
+                font-size: 2rem;
+            }
+
             .guests-table {
                 display: block;
                 overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .guests-table th,
+            .guests-table td {
+                padding: 12px 8px;
+                font-size: 0.9rem;
+                white-space: nowrap;
+            }
+
+            .guests-table th:nth-child(6),
+            .guests-table td:nth-child(6) {
+                position: sticky;
+                right: 0;
+                background: white;
+                box-shadow: -2px 0 4px rgba(0,0,0,0.1);
+                min-width: 120px;
+            }
+
+            .search-bar input {
+                font-size: 1rem;
+                padding: 12px 15px;
             }
         }
-        
+
         @media (max-width: 480px) {
+            .admin-container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .admin-header h1 {
+                font-size: 1.5rem;
+            }
+
             .stats-cards {
                 grid-template-columns: 1fr;
+                gap: 10px;
             }
-            
-            .admin-actions {
-                flex-direction: column;
+
+            .stat-card {
+                padding: 12px;
+                text-align: center;
             }
-            
-            .admin-actions .btn {
-                width: 100%;
-                margin-bottom: 10px;
+
+            .stat-card h3 {
+                font-size: 1.8rem;
+                margin-bottom: 5px;
+            }
+
+            .stat-card p {
+                font-size: 0.9rem;
+            }
+
+            .guests-table th,
+            .guests-table td {
+                padding: 8px 6px;
+                font-size: 0.8rem;
+            }
+
+            .guests-table th:nth-child(1),
+            .guests-table td:nth-child(1),
+            .guests-table th:nth-child(2),
+            .guests-table td:nth-child(2) {
+                min-width: 80px;
+            }
+
+            .guests-table th:nth-child(6),
+            .guests-table td:nth-child(6) {
+                min-width: 100px;
+            }
+
+            .action-btn {
+                padding: 6px 8px;
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                width: 98%;
+                max-width: none;
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .modal-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                font-size: 1rem;
+                padding: 12px;
+            }
+
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
             }
         }
     </style>

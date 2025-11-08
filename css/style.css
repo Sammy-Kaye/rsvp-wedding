@@ -739,86 +739,171 @@ footer .copyright {
 }
 
 @media (max-width: 768px) {
+    nav {
+        padding: 15px 0;
+    }
+
+    .nav-logo {
+        font-size: 1.5rem;
+    }
+
     .nav-links {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 80%;
-        max-width: 300px;
+        width: 280px;
         height: 100vh;
         background-color: white;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
+        padding-top: 80px;
         transition: right 0.3s ease;
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
     }
-    
+
     .nav-links.active {
         right: 0;
     }
-    
+
+    .nav-links a {
+        margin: 15px 0;
+        font-size: 1.1rem;
+    }
+
     .mobile-menu-btn {
         display: block;
-        /* position: fixed; */ /* Removed fixed positioning */
-        /* top: 20px; */ /* Removed fixed positioning */
-        /* right: 20px; */ /* Removed fixed positioning */
-        order: 3; /* Place it after lang-toggle */
+        position: relative;
+        order: 3;
+        margin-left: 15px;
     }
-    
+
     .mobile-menu-btn.active span:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
     }
-    
+
     .mobile-menu-btn.active span:nth-child(2) {
         opacity: 0;
     }
-    
+
     .mobile-menu-btn.active span:nth-child(3) {
         transform: rotate(-45deg) translate(7px, -6px);
     }
-    
+
     .lang-toggle {
-        /* position: fixed; */ /* Removed fixed positioning */
-        /* top: 20px; */ /* Removed fixed positioning */
-        /* right: 80px; */ /* Removed fixed positioning */
-        z-index: 1001; /* Ensure it's above other elements */
-        margin-left: auto; /* Push it to the right */
-        order: 2; /* Place it after nav-logo */
+        position: relative;
+        top: auto;
+        right: auto;
+        z-index: 1001;
+        margin-left: 10px;
+        order: 2;
     }
 
     .hero {
-        min-height: 600px;
-        background-position: center center; /* Center on mobile */
+        min-height: 500px;
+        background-position: center center;
+        padding: 0 15px;
     }
-    
+
+    .hero-content {
+        margin-top: 80px;
+    }
+
     .hero-content h1 {
-        font-size: 3rem;
+        font-size: 2.8rem;
         flex-direction: column;
+        text-align: center;
     }
 
     #Narcisse, #jemima {
         transform: translateY(0);
+        display: block;
+        margin: 0 10px;
     }
-    
+
+    #ampersand {
+        font-size: 4rem;
+        margin: 10px 0;
+    }
+
+    .hero-content .date,
+    .hero-content .location {
+        font-size: 1.1rem;
+    }
+
     .rsvp-container {
-        padding: 30px 20px;
+        padding: 25px 15px;
+        margin: 0 10px;
     }
-    
+
     .rsvp-options {
         flex-direction: column;
+        gap: 10px;
+    }
+
+    .rsvp-option {
+        padding: 15px 20px;
+        font-size: 1rem;
     }
 
     #countdown-timer {
         flex-direction: column;
+        gap: 15px;
+    }
+
+    .countdown-item {
+        min-width: 200px;
+        padding: 15px;
     }
 
     .story-content {
-        margin-top: 20px; /* Reduced margin-top */
+        margin-top: 20px;
+        gap: 20px;
     }
 
     .section {
-        padding: 40px 0; /* Reduced padding */
+        padding: 35px 0;
+    }
+
+    .section h2 {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .details-grid {
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .detail-card {
+        padding: 30px 20px;
+    }
+
+    .carousel {
+        height: 350px;
+    }
+
+    /* Modal responsiveness */
+    .modal-content {
+        width: 95%;
+        max-width: 450px;
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.3rem;
+    }
+
+    /* Search results on mobile */
+    .search-results {
+        max-height: 250px;
+    }
+
+    .search-results div {
+        padding: 15px 20px;
+        font-size: 1rem;
     }
 }
 
