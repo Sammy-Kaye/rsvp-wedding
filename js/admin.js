@@ -108,6 +108,15 @@ if (!document.getElementById('notificationStyles')) {
     document.head.appendChild(style);
 }
 
+// Add Guest Modal Elements
+const addGuestBtn = document.getElementById('addGuestBtn');
+const addGuestModal = document.getElementById('addGuestModal');
+const addGuestForm = document.getElementById('addGuestForm');
+const guestNameInput = document.getElementById('guestName');
+const guestEmailInput = document.getElementById('guestEmail');
+const guestNotesInput = document.getElementById('guestNotes');
+const partySizeInput = document.getElementById('partySize');
+
 // Reset Guest Modal Elements
 const resetGuestModal = document.getElementById('resetGuestModal');
 const resetGuestForm = document.getElementById('resetGuestForm');
@@ -405,6 +414,17 @@ async function deleteGuest(guestId) {
     }
 }
 
+// Modal functionality for add guest
+if (addGuestBtn) {
+    addGuestBtn.addEventListener('click', () => {
+        addGuestModal.classList.remove('hidden');
+    });
+}
+
+if (addGuestForm) {
+    addGuestForm.addEventListener('submit', handleAddGuest);
+}
+
 // Modal functionality for reset guest
 if (resetGuestForm) {
     resetGuestForm.addEventListener('submit', handleResetGuest);
@@ -420,6 +440,9 @@ document.addEventListener('click', (e) => {
     if (e.target.classList.contains('close-modal')) {
         closeAllModals();
     }
+    if (e.target.id === 'cancelAddGuest') {
+        closeAddGuestModal();
+    }
     if (e.target.id === 'cancelResetGuest') {
         closeResetGuestModal();
     }
@@ -429,11 +452,18 @@ document.addEventListener('click', (e) => {
 });
 
 function closeAllModals() {
+    addGuestModal.classList.add('hidden');
     resetGuestModal.classList.add('hidden');
     editGuestModal.classList.add('hidden');
+    addGuestForm.reset();
     resetGuestForm.reset();
     editGuestForm.reset();
     currentEditingGuestId = null;
+}
+
+function closeAddGuestModal() {
+    addGuestModal.classList.add('hidden');
+    addGuestForm.reset();
 }
 
 function closeResetGuestModal() {
@@ -445,6 +475,62 @@ function closeEditGuestModal() {
     editGuestModal.classList.add('hidden');
     editGuestForm.reset();
     currentEditingGuestId = null;
+}
+
+async function handleAddGuest(e) {
+    e.preventDefault();
+
+    const name = guestNameInput.value.trim();
+    const email = guestEmailInput.value.trim();
+    const notes = guestNotesInput.value.trim();
+    const partySize = parseInt(partySizeInput.value, 10);
+
+    if (!name) {
+        showNotification('Please enter a guest name.', 'warning', 4000);
+        guestNameInput.focus();
+        return;
+    }
+
+    if (isNaN(partySize) || partySize < 1) {
+        showNotification('Please enter a valid party size.', 'warning', 4000);
+        partySizeInput.focus();
+        return;
+    }
+
+    try {
+        // Check if guest already exists
+        const existingGuest = await db.collection('guests')
+            .where('name', '==', name)
+            .get();
+
+        if (!existingGuest.empty) {
+            showNotification('A guest with this name already exists.', 'warning', 4000);
+            guestNameInput.focus();
+            return;
+        }
+
+        // Add new guest to Firestore
+        const guestData = {
+            name: name,
+            email: email || null,
+            notes: notes || null,
+            partySize: partySize,
+            rsvp: 'pending',
+            code: null,
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        await db.collection('guests').add(guestData);
+
+        showNotification('Guest added successfully!', 'success', 4000);
+        closeAddGuestModal();
+        loadGuestData(); // Refresh the table
+
+    } catch (error) {
+        console.error('Error adding guest:', error);
+        showNotification('Failed to add guest. Please try again.', 'error', 5000);
+    }
 }
 
 async function handleResetGuest(e) {
