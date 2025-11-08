@@ -167,7 +167,204 @@ function showDashboard() {
     loadGuestData();
 }
 
-// ... (rest of the file)
+// Load guest data from Firestore
+async function loadGuestData() {
+    try {
+        const querySnapshot = await db.collection('guests').orderBy('createdAt', 'desc').get();
+        const guests = [];
+
+        querySnapshot.forEach((doc) => {
+            guests.push({ id: doc.id, ...doc.data() });
+        });
+
+        displayGuests(guests);
+        updateStats(guests);
+    } catch (error) {
+        console.error('Error loading guest data:', error);
+        showNotification('Failed to load guest data.', 'error', 5000);
+    }
+}
+
+// Display guests in the table
+function displayGuests(guests) {
+    const tbody = document.getElementById('guestsTableBody');
+    tbody.innerHTML = '';
+
+    if (guests.length === 0) {
+        const emptyRow = document.createElement('tr');
+        emptyRow.innerHTML = '<td colspan="6" style="text-align: center; padding: 40px; color: #666;">No guests found.</td>';
+        tbody.appendChild(emptyRow);
+        return;
+    }
+
+    guests.forEach(guest => {
+        const row = document.createElement('tr');
+
+        const statusClass = guest.rsvp === 'attending' ? 'status-attending' :
+                           guest.rsvp === 'not_attending' ? 'status-not_attending' : 'status-pending';
+
+        const lastUpdated = guest.lastUpdated ? new Date(guest.lastUpdated.toDate()).toLocaleDateString() : 'Never';
+
+        row.innerHTML = `
+            <td>${guest.name}</td>
+            <td>${guest.email || '-'}</td>
+            <td><span class="status ${statusClass}">${guest.rsvp.replace('_', ' ')}</span></td>
+            <td>${guest.code || '-'}</td>
+            <td>${lastUpdated}</td>
+            <td>
+                <button class="action-btn" onclick="editGuest('${guest.id}')" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn" onclick="deleteGuest('${guest.id}')" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+
+        tbody.appendChild(row);
+    });
+}
+
+// Update statistics cards
+function updateStats(guests) {
+    const totalGuests = guests.length;
+    const attendingCount = guests.filter(g => g.rsvp === 'attending').length;
+    const notAttendingCount = guests.filter(g => g.rsvp === 'not_attending').length;
+    const pendingCount = guests.filter(g => g.rsvp === 'pending').length;
+
+    document.getElementById('totalGuests').textContent = totalGuests;
+    document.getElementById('attendingCount').textContent = attendingCount;
+    document.getElementById('notAttendingCount').textContent = notAttendingCount;
+    document.getElementById('pendingCount').textContent = pendingCount;
+}
+
+// Search functionality
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#guestsTableBody tr');
+
+        rows.forEach(row => {
+            const name = row.cells[0].textContent.toLowerCase();
+            const email = row.cells[1].textContent.toLowerCase();
+
+            if (name.includes(searchTerm) || email.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+}
+
+// Refresh button
+if (refreshBtn) {
+    refreshBtn.addEventListener('click', () => {
+        loadGuestData();
+        showNotification('Data refreshed!', 'success', 3000);
+    });
+}
+
+// Export to CSV
+if (exportBtn) {
+    exportBtn.addEventListener('click', async () => {
+        try {
+            const querySnapshot = await db.collection('guests').orderBy('createdAt', 'desc').get();
+            const guests = [];
+
+            querySnapshot.forEach((doc) => {
+                guests.push(doc.data());
+            });
+
+            if (guests.length === 0) {
+                showNotification('No data to export.', 'warning', 4000);
+                return;
+            }
+
+            const csvContent = generateCSV(guests);
+            downloadCSV(csvContent, 'wedding-guests.csv');
+            showNotification('Data exported successfully!', 'success', 4000);
+        } catch (error) {
+            console.error('Export error:', error);
+            showNotification('Failed to export data.', 'error', 5000);
+        }
+    });
+}
+
+function generateCSV(guests) {
+    const headers = ['Name', 'Email', 'Party Size', 'RSVP Status', 'Code', 'Notes', 'Last Updated'];
+    const rows = guests.map(guest => [
+        guest.name,
+        guest.email || '',
+        guest.partySize || 1,
+        guest.rsvp || 'pending',
+        guest.code || '',
+        guest.notes || '',
+        guest.lastUpdated ? guest.lastUpdated.toDate().toLocaleString() : ''
+    ]);
+
+    const csvContent = [headers, ...rows]
+        .map(row => row.map(field => `"${field}"`).join(','))
+        .join('\n');
+
+    return csvContent;
+}
+
+function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Edit guest (placeholder - would need modal implementation)
+function editGuest(guestId) {
+    showNotification('Edit functionality coming soon!', 'info', 4000);
+}
+
+// Delete guest
+async function deleteGuest(guestId) {
+    if (!confirm('Are you sure you want to delete this guest?')) {
+        return;
+    }
+
+    try {
+        await db.collection('guests').doc(guestId).delete();
+        showNotification('Guest deleted successfully!', 'success', 4000);
+        loadGuestData();
+    } catch (error) {
+        console.error('Delete error:', error);
+        showNotification('Failed to delete guest.', 'error', 5000);
+    }
+}
+
+// Modal functionality for add guest
+if (addGuestBtn) {
+    addGuestBtn.addEventListener('click', () => {
+        addGuestModal.classList.remove('hidden');
+    });
+}
+
+if (addGuestForm) {
+    addGuestForm.addEventListener('submit', handleAddGuest);
+}
+
+// Close modal functionality
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('close-modal') || e.target.id === 'cancelAddGuest') {
+        closeAddGuestModal();
+    }
+});
+
+function closeAddGuestModal() {
+    addGuestModal.classList.add('hidden');
+    addGuestForm.reset();
+}
 
 async function handleAddGuest(e) {
     e.preventDefault();
