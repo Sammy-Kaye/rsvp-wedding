@@ -109,7 +109,6 @@ if (!document.getElementById('notificationStyles')) {
 }
 
 // Reset Guest Modal Elements
-const resetGuestBtn = document.getElementById('resetGuestBtn');
 const resetGuestModal = document.getElementById('resetGuestModal');
 const resetGuestForm = document.getElementById('resetGuestForm');
 const resetGuestNameInput = document.getElementById('resetGuestName');
@@ -222,6 +221,9 @@ function displayGuests(guests) {
             <td>
                 <button class="action-btn" onclick="editGuest('${guest.id}')" title="Edit">
                     <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn" onclick="resetGuest('${guest.id}')" title="Reset Code">
+                    <i class="fas fa-refresh"></i>
                 </button>
                 <button class="action-btn" onclick="deleteGuest('${guest.id}')" title="Delete">
                     <i class="fas fa-trash"></i>
@@ -365,6 +367,31 @@ function editGuest(guestId) {
     });
 }
 
+// Reset guest code
+async function resetGuest(guestId) {
+    if (!confirm('Are you sure you want to reset this guest\'s RSVP code? This will generate a new code and reset their RSVP status to pending.')) {
+        return;
+    }
+
+    try {
+        // Generate new code
+        const newCode = generateUniqueCode();
+
+        await db.collection('guests').doc(guestId).update({
+            code: newCode,
+            rsvp: 'pending',
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        showNotification(`Guest code reset successfully! New code: ${newCode}`, 'success', 6000);
+        loadGuestData();
+
+    } catch (error) {
+        console.error('Error resetting guest:', error);
+        showNotification('Failed to reset guest code.', 'error', 5000);
+    }
+}
+
 // Delete guest
 async function deleteGuest(guestId) {
     if (!confirm('Are you sure you want to delete this guest?')) {
@@ -382,12 +409,6 @@ async function deleteGuest(guestId) {
 }
 
 // Modal functionality for reset guest
-if (resetGuestBtn) {
-    resetGuestBtn.addEventListener('click', () => {
-        resetGuestModal.classList.remove('hidden');
-    });
-}
-
 if (resetGuestForm) {
     resetGuestForm.addEventListener('submit', handleResetGuest);
 }
